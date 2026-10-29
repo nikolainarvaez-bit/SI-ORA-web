@@ -1,0 +1,5 @@
+Get-ChildItem -Recurse -File -Exclude *.png,*.jpg,*.jpeg,*.gif,*.ico,*.zip,*.pdf,node_modules,.git | ForEach-Object {
+    "========================================`nARCHIVO: $($_.FullName)`n========================================"
+    Get-Content $_.FullName -Raw
+    "`n`n"
+} | Out-File -Encoding utf8 estructura_siora.txt

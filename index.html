@@ -1,0 +1,2353 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/jpeg" href="images/favicon.jpg">
+  <title>SI-ORA Sistema de gestión para la investigación</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+  <script src="app.js?v=20261013-evidencias"></script>
+</head>
+<body>
+	<!-- Cargar Font Awesome para los íconos (Añadir dentro de <head>) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- ================= BARRA DE NAVEGACIÓN Y HERRAMIENTAS MÉTODO ORA ================= -->
+<header id="app-header" class="app-header">
+  <nav class="ora-navbar" aria-label="Herramientas del proyecto">
+    <div class="ora-nav-brand">
+      <a href="#integrantes" class="ora-brand-link" aria-label="Ir a Integrantes">
+        <img src="images/log.jpg" width="204" height="51" alt="Logo SI-ORA"/>
+      </a>
+    </div>
+
+    <div class="ora-nav-actions">
+      <div class="file-toolbar">
+        <label class="file-name-label" for="file-name-input"><i class="fa-solid fa-file-signature"></i></label>
+        <input id="file-name-input" type="text" placeholder="Nombre del archivo" title="Nombre del archivo a guardar">
+        <button class="action-btn" id="btn-save-project" type="button" title="Guardar Cambios" aria-label="Guardar Cambios" onclick="guardarProyectoSIORA()">
+          <i class="fa-solid fa-floppy-disk"></i>
+          <span id="save-status-indicator" role="status" aria-live="polite" aria-label="Cambios no guardados" title="Cambios no guardados">
+            <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
+            <span>Cambios no guardados</span>
+          </span>
+        </button>
+        <div class="more-tools-wrap">
+          <button class="btn-more-tools" id="btnMoreTools" type="button" aria-expanded="false" aria-controls="more-tools-dropdown" title="Más herramientas">⋮</button>
+          <div class="more-tools-dropdown" id="more-tools-dropdown">
+            <button class="action-btn compact-btn" id="btn-open" type="button" title="Abrir proyecto del PC" aria-label="Abrir proyecto del PC">
+              <i class="fa-solid fa-file-import"></i><span>Abrir</span>
+            </button>
+            <button class="action-btn compact-btn" id="btn-new-project" type="button" title="Crear nuevo proyecto" aria-label="Crear nuevo proyecto">
+              <i class="fa-solid fa-file-circle-plus"></i><span>Nuevo</span>
+            </button>
+            <button class="action-btn compact-btn" id="btn-save-as" type="button" title="Exportar proyecto como archivo HTML (Solo Líder)">
+              <i class="fa-solid fa-file-export"></i>
+            </button>
+            <button class="action-btn compact-btn" id="btn-undo" type="button" title="Deshacer"><i class="fa-solid fa-rotate-left"></i></button>
+            <button class="action-btn compact-btn" id="btn-redo" type="button" title="Rehacer"><i class="fa-solid fa-rotate-right"></i></button>
+            <button class="action-btn compact-btn" id="btn-copy" type="button" title="Copiar"><i class="fa-solid fa-clone"></i></button>
+            <button class="action-btn compact-btn" id="btn-paste" type="button" title="Pegar"><i class="fa-solid fa-paste"></i></button>
+            <button class="action-btn compact-btn" id="btn-historial" type="button" title="Ver historial de cambios" aria-label="Ver historial de cambios"><i class="fa-solid fa-clock-rotate-left"></i></button>
+            <button class="action-btn compact-btn" id="btn-compartir" type="button" title="Compartir con equipo o docente"><i class="fa-solid fa-share-nodes"></i></button>
+            <button class="action-btn compact-btn drive-folder-btn" id="btn-carpeta_seguimiento" type="button" title="Abrir carpeta de evidencias (Google Drive)">
+              <i class="fa-solid fa-folder-open"></i>
+            </button>
+            <button class="action-btn compact-btn excel-btn" id="btn-excel" type="button" title="Ver seguimiento y rúbrica en Google Sheets / Excel"><i class="fa-solid fa-file-excel"></i></button>
+            <button class="action-btn compact-btn word-btn" id="btn-word" type="button" title="Exportar a Word / Artículo final"><i class="fa-solid fa-file-word"></i></button>
+            <button class="action-btn compact-btn evidence-btn" id="btn-carpeta-evidencias" type="button" title="Gestionar artículos y documentos consultados" aria-label="Gestionar artículos y documentos consultados">
+              <i class="fa-solid fa-book-bookmark"></i>
+            </button>
+            <button class="action-btn compact-btn config-btn" id="btn-config" type="button" title="Configuración del proyecto y parámetros"><i class="fa-solid fa-gear"></i></button>
+            <button id="project-access-notifications" class="access-notification-btn" type="button" hidden>
+              <i class="fa-solid fa-bell"></i><span>Solicitudes de acceso</span><strong data-request-count>0</strong>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-collab">
+      <div id="connected-users" class="connected-users" title="Usuarios conectados">
+        <span class="presence-indicator"></span>
+        <div id="usuarios-conectados-lista" class="usuarios-conectados-lista connected-avatars-group" aria-live="polite"></div>
+      </div>
+      <div class="user-profile">
+        <button id="btnAuth" class="user-profile-trigger" type="button" aria-label="Iniciar sesión" aria-expanded="false" aria-controls="user-profile-menu" onclick="iniciarSesionGoogle()">
+          <img class="user-avatar-circle" alt="" hidden>
+          <span class="user-avatar-fallback" aria-hidden="true">G</span>
+        </button>
+        <div class="user-profile-menu" id="user-profile-menu" hidden>
+          <span class="user-profile-name" id="user-profile-name">No has iniciado sesión</span>
+          <button class="user-signout-btn" id="btnSignOut" type="button" hidden><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</button>
+        </div>
+      </div>
+      <button class="summary-toggle-button" id="btn-toggle-summary" type="button" title="Navegar por el documento" aria-label="Navegar por el documento" aria-controls="quick-summary-panel">
+        <i class="fa-solid fa-list"></i>
+      </button>
+      <button id="btnToggleMenu" class="btn-toggle-menu" type="button" aria-expanded="true" aria-label="Contraer barra superior" title="Contraer barra superior">
+        <i class="fa-solid fa-chevron-up"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<div id="modal-compartir" class="share-modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-compartir-title">
+  <div class="share-modal-card">
+    <div class="share-modal-header">
+      <h3 id="modal-compartir-title">Compartir con equipo o docente</h3>
+      <button type="button" class="share-close-btn" data-close-share-modal aria-label="Cerrar">×</button>
+    </div>
+
+    <label class="share-field-label" for="share-email">Añadir personas</label>
+    <input id="share-email" type="email" class="share-input" placeholder="usuario@cun.edu.co" pattern=".+@cun\.edu\.co" aria-describedby="share-email-help" data-owner-only disabled />
+    <small id="share-email-help">Solo se aceptan correos institucionales @cun.edu.co.</small>
+
+    <label class="share-field-label" for="share-role">Permisos</label>
+    <select id="share-role" class="share-input" data-owner-only disabled>
+      <option value="Editor">Editor</option>
+      <option value="Lector">Lector</option>
+    </select>
+
+    <div class="share-actions">
+      <button id="btn-agregar-colaborador" type="button" class="share-primary-btn" data-owner-only disabled>Agregar Colaborador</button>
+      <button id="btn-copiar-enlace" type="button" class="share-secondary-btn">Copiar Enlace del Proyecto</button>
+    </div>
+
+    <div class="share-collaborators-panel">
+      <h4>Personas con acceso</h4>
+      <ul id="share-collaborators-list" class="share-collaborators-list" aria-live="polite"></ul>
+    </div>
+    <div id="access-requests-panel" class="share-collaborators-panel hidden">
+      <h4>Solicitudes pendientes</h4>
+      <ul id="access-requests-list" class="share-collaborators-list"></ul>
+    </div>
+  </div>
+</div>
+
+<div id="modalHistorial" class="share-modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalHistorial-title">
+  <div class="share-modal-card">
+    <div class="share-modal-header">
+      <h3 id="modalHistorial-title">Historial de cambios</h3>
+      <button type="button" class="share-close-btn" data-close-history-modal aria-label="Cerrar">×</button>
+    </div>
+    <div class="share-collaborators-panel">
+      <ul id="listaHistorial" class="share-collaborators-list" aria-live="polite">
+        <li><span>Guarda el proyecto para comenzar el historial.</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="file-open-input" accept=".json,.siora.json,.html,.htm" style="display:none">
+
+<div class="canvas-container">
+    <!-- ================= SECCIÓN INTRODUCTORIA Y DASHBOARD DEL PROYECTO ================= -->
+<p class="section-desc" style="text-align: justify; line-height: 1.6;">
+  El fundamento de esta guía es la ciencia, reconocida como el medio indispensable para que el ser humano pueda constatar y certificar científicamente cualquier objeto o fenómeno. A través de una serie de mecanismos e instrumentos que componen el método científico, se logran resultados precisos y confiables (Martínez, 2001).<br>
+  Entendemos la ciencia como un compendio de conocimientos estructurados y sistemáticos, que se adquieren mediante la observación, proyección y experimentación, formulando interrogantes y estableciendo supuestos. Esta visión se alinea con Alexis Pérez (2002), quien la describe como un conjunto de conocimientos racionales y organizados cuya finalidad es transformar la realidad para el beneficio humano (p. 15). Por lo tanto, el conocimiento es esencial para dar sentido a nuestro entorno, y lo obtenemos mediante procesos de investigación específicos.
+</p>
+
+<p class="section-desc" style="text-align: center; font-style: italic; font-weight: 500; margin: 20px 0;">
+  Para este tipo de planificación, es esencial crear equipos de trabajo compuestos por personas no solo preparadas, sino fundamentalmente motivadas. Estos equipos deben ser multifuncionales y tener la flexibilidad necesaria para adaptarse a los cambios, siempre con un claro enfoque en la mejora continua y la consecución de los objetivos dentro del plazo establecido.
+</p>
+
+<!-- CONTENEDOR DEL DASHBOARD DE EQUIPO -->
+<div id="integrantes" class="team-dashboard-container">
+
+  <div class="facilitator-field">
+    <label for="correo_facilitador">Facilitador / Docente</label>
+    <input type="email" id="correo_facilitador" class="form-control" placeholder="docente@cun.edu.co">
+  </div>
+
+  <!-- INTEGRANTE 1 (GERENTE DEL PROYECTO) -->
+  <div class="team-row gerente">
+    <span class="gerente-badge">Gerente del proyecto</span>
+    <div>
+      <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Nombres Integrante 1:</div>
+      <input type="text" class="input-red" id="nombre_1" placeholder="Nombres...">
+    </div>
+    <div>
+      <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Apellidos Integrante 1:</div>
+      <input type="text" class="input-red" id="apellido_1" placeholder="Apellidos...">
+    </div>
+    <div>
+      <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Programa académico</div>
+      <select class="select-dashboard-red" id="programa_1">
+        <option value="">Seleccionar programa...</option>
+      </select>
+    </div>
+    <div>
+      <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Código asignatura</div>
+      <select class="select-dashboard-red" id="codigo_1">
+        <option value="">Seleccionar código...</option>
+      </select>
+    </div>
+    <div>
+      <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Correo institucional</div>
+      <input type="email" id="correo_integrante_1" class="form-control input-correo-integrante" placeholder="correo@cun.edu.co" data-integrante="1">
+    </div>
+    <div style="text-align: center;">
+      <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">% Participación</div>
+      <!-- CAJA DE RÉPLICA/CÁLCULO AUTOMÁTICO (LINEA NEGRA) -->
+      <input type="text" class="input-black-replica" id="part_1" readonly placeholder="%" style="text-align: center; font-weight: bold;">
+    </div>
+  </div>
+
+  <!-- INTEGRANTE 2 -->
+  <div class="team-row">
+    <div>
+      <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Nombres Integrante 2:</div>
+      <input type="text" class="input-red" id="nombre_2" placeholder="Nombres...">
+    </div>
+    <div>
+      <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Apellidos Integrante 2:</div>
+      <input type="text" class="input-red" id="apellido_2" placeholder="Apellidos...">
+    </div>
+    <div>
+      <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Programa académico</div>
+      <select class="select-dashboard-red" id="programa_2">
+        <option value="">Seleccionar programa...</option>
+      </select>
+    </div>
+    <div>
+      <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Código asignatura</div>
+      <select class="select-dashboard-red" id="codigo_2">
+        <option value="">Seleccionar código...</option>
+      </select>
+    </div>
+    <div>
+      <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Correo institucional</div>
+      <input type="email" id="correo_integrante_2" class="form-control input-correo-integrante" placeholder="correo@cun.edu.co" data-integrante="2">
+    </div>
+    <div style="text-align: center;">
+      <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">% Participación</div>
+      <input type="text" class="input-black-replica" id="part_2" readonly placeholder="%" style="text-align: center; font-weight: bold;">
+    </div>
+  </div>
+
+  <!-- INTEGRANTE 3 -->
+  <div class="team-row">
+    <div>
+      <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Nombres Integrante 3:</div>
+      <input type="text" class="input-red" id="nombre_3" placeholder="Nombres...">
+    </div>
+    <div>
+      <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Apellidos Integrante 3:</div>
+      <input type="text" class="input-red" id="apellido_3" placeholder="Apellidos...">
+    </div>
+    <div>
+      <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Programa académico</div>
+      <select class="select-dashboard-red" id="programa_3">
+        <option value="">Seleccionar programa...</option>
+      </select>
+    </div>
+    <div>
+      <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Código asignatura</div>
+      <select class="select-dashboard-red" id="codigo_3">
+        <option value="">Seleccionar código...</option>
+      </select>
+    </div>
+    <div>
+      <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Correo institucional</div>
+      <input type="email" id="correo_integrante_3" class="form-control input-correo-integrante" placeholder="correo@cun.edu.co" data-integrante="3">
+    </div>
+    <div style="text-align: center;">
+      <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">% Participación</div>
+      <input type="text" class="input-black-replica" id="part_3" readonly placeholder="%" style="text-align: center; font-weight: bold;">
+    </div>
+  </div>
+
+  <!-- INTEGRANTE 4 -->
+  <div class="team-row">
+    <div>
+      <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Nombres Integrante 4:</div>
+      <input type="text" class="input-red" id="nombre_4" placeholder="Nombres...">
+    </div>
+    <div>
+      <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Apellidos Integrante 4:</div>
+      <input type="text" class="input-red" id="apellido_4" placeholder="Apellidos...">
+    </div>
+    <div>
+      <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Programa académico</div>
+      <select class="select-dashboard-red" id="programa_4">
+        <option value="">Seleccionar programa...</option>
+      </select>
+    </div>
+    <div>
+      <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Código asignatura</div>
+      <select class="select-dashboard-red" id="codigo_4">
+        <option value="">Seleccionar código...</option>
+      </select>
+    </div>
+    <div>
+      <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Correo institucional</div>
+      <input type="email" id="correo_integrante_4" class="form-control input-correo-integrante" placeholder="correo@cun.edu.co" data-integrante="4">
+    </div>
+    <div style="text-align: center;">
+      <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">% Participación</div>
+      <input type="text" class="input-black-replica" id="part_4" readonly placeholder="%" style="text-align: center; font-weight: bold;">
+    </div>
+  </div>
+
+  <!-- INTEGRANTE 5 -->
+  <div class="team-row">
+    <div>
+      <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Nombres Integrante 5:</div>
+      <input type="text" class="input-red" id="nombre_5" placeholder="Nombres...">
+    </div>
+    <div>
+      <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Apellidos Integrante 5:</div>
+      <input type="text" class="input-red" id="apellido_5" placeholder="Apellidos...">
+    </div>
+    <div>
+      <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Programa académico</div>
+      <select class="select-dashboard-red" id="programa_5">
+        <option value="">Seleccionar programa...</option>
+      </select>
+    </div>
+    <div>
+      <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Código asignatura</div>
+      <select class="select-dashboard-red" id="codigo_5">
+        <option value="">Seleccionar código...</option>
+      </select>
+    </div>
+    <div>
+      <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Correo institucional</div>
+      <input type="email" id="correo_integrante_5" class="form-control input-correo-integrante" placeholder="correo@cun.edu.co" data-integrante="5">
+    </div>
+    <div style="text-align: center;">
+      <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">% Participación</div>
+      <input type="text" class="input-black-replica" id="part_5" readonly placeholder="%" style="text-align: center; font-weight: bold;">
+    </div>
+  </div>
+
+</div>
+
+<!-- PARRAFO EXPLICATIVO DEL MÉTODO ORA -->
+<p class="section-desc" style="text-align: justify; line-height: 1.6; margin-top: 20px;">
+  El <strong>Método ORA (Observación, Reflexión y Aplicación del conocimiento)</strong> se implementa como guía y bitácora en la asignatura <strong>"Investigación, Ciencia y tecnología"</strong>. Este instrumento facilita la recolección estructurada de información para la concepción de proyectos innovadores con un enfoque disciplinar, específicamente para los proyectos ACA. Constituye la estructura fundamental para la producción de conocimiento y la transferencia tecnológica, al organizar y gestionar systematically la información del proyecto a lo largo de sus fases, integrando competencias y conocimientos para el logro de los objetivos específicos.
+</p>
+
+<!-- TÍTULO DEL PROYECTO (AHORA CAJA DE RÉPLICA / BORDES NEGROS) -->
+<div class="project-title-container">
+  <span class="project-title-label">Título del Proyecto:</span>
+  <textarea class="input-black-replica titulo-replica-target" rows="2" style="width: 100%;" readonly placeholder="Se replicará automáticamente el título generado en la dinámica..."></textarea>
+</div>
+<!-- ================= PARTE 1: VARIABLES - TÍTULO ================= -->
+    <a id="variables-titulo" class="section-banner section-banner-link" href="https://drive.google.com/file/d/1Mc0fztOoCG5_K5Rfs88blKuNjlRjh3BV/view" target="_blank" rel="noopener noreferrer">VARIABLES - TITULO</a>
+    
+    <div class="outer-frame">
+      
+      <!-- 3 COLUMNAS SUPERIORES DE VARIABLES -->
+      <div class="grid-3">
+        
+        <!-- Columna 1 -->
+        <div class="col-item">
+          <div class="header-title">
+            Variable Objeto de Estudio<br>
+            <span class="header-subtitle">(Temática - Aplicación disciplinar)</span>
+          </div>
+          <!-- VARIABLE OBJETO DE ESTUDIO -->
+			<textarea class="input-red var-objeto-origen" id="var_objeto_origen" placeholder="Ingrese Variable Objeto de Estudio..."></textarea>
+          <div class="box-instruction-black">
+            <div class="instruction-heading">QUÉ vamos a MEDIR</div>
+            <div class="instruction-text">
+              Característica, cualidad o propiedad observada y adquirir diferentes valores y es susceptible de ser cuantificado o medido para recolectar datos.
+            </div>
+          </div>
+        </div>
+
+        <!-- Columna 2 -->
+        <div class="col-item">
+          <a class="header-title header-title-link" href="https://drive.google.com/file/d/1R7rLcfbyauvwDBjifLQa_eSzRtCGuVWg/view" target="_blank" rel="noopener noreferrer">
+            Variable Propósito disciplinar<br>
+            <span class="header-subtitle">(Asignatura NIP - Eje disciplinar)</span>
+          </a>
+          <!-- CAMPO DESPLEGABLE NPI EN EL HTML -->
+			<div>
+ 			 <!-- VARIABLE PROPÓSITO DISCIPLINAR (Select NIP) -->
+				<select class="select-dashboard-red" id="select_asignaturas_npi">
+ 				 	<option value="">-- Seleccione Asignatura NIP --</option>
+				</select>
+        <input class="input-red" id="variable_proposito_alternativa" type="text"
+          placeholder="Variable alternativa (docente u otro usuario)"
+          style="display: none; margin-top: 6px;">
+			</div>
+          <div class="box-instruction-black">
+            <div class="instruction-heading">PORQUÉ/PARA QUÉ vamos ALCANZAR</div>
+            <div class="instruction-text">
+              Característica, cualidad o propiedad observada y adquirir diferentes valores y es susceptible de ser cuantificado o medido para recolectar datos.
+            </div>
+          </div>
+        </div>
+
+        <!-- Columna 3 -->
+        <div class="col-item">
+          <div class="header-title">
+            Variable Audiencia<br>
+            <span class="header-subtitle">(Comunidad, Organización, Contexto)</span>
+          </div>
+          <!-- VARIABLE AUDIENCIA -->
+				<textarea class="input-red var-audiencia-origen" id="var_audiencia_origen" placeholder="Ingrese Variable Audiencia..."></textarea>
+          <div class="box-instruction-black">
+            <div class="instruction-heading">PARA QUIEN/DONDE vamos a REALIZAR</div>
+            <div class="instruction-text">
+              Característica, cualidad o propiedad observada y adquirir diferentes valores y es susceptible de ser cuantificado o medido para recolectar datos.
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- LÍNEAS CONECTORAS -->
+      <div class="tree-connector"></div>
+      <div class="center-line"></div>
+
+      <!-- SECCIÓN TÍTULO -->
+      <div class="title-label">TÍTULO</div>
+      <textarea class="input-red" id="titulo_origen" rows="2" placeholder="Puede autogenerarse con Variable Objeto + Asignatura NIP + Variable Audiencia y luego editarse manualmente"></textarea>
+      
+      <div class="footer-instruction">
+        Evaluación del título: debe integrar Objeto de estudio, Propósito disciplinar y Audiencia.
+      </div>
+      <div id="evaluacion_titulo" class="title-evaluation" aria-live="polite">
+        Escriba un título para evaluar su relación con las tres variables.
+      </div>
+
+      <!-- 3 COLUMNAS INFERIORES -->
+      <div class="grid-3" style="margin-top: 15px;">
+        
+        <div class="col-item">
+          <div class="box-instruction-black no-margin">
+            <div class="instruction-heading clean-margin">DEFINICIÓN variable objeto de estudio</div>
+          </div>
+          <textarea class="input-red def-objeto-origen" placeholder="Ingrese definición..."></textarea>
+          <div class="label-bottom">Referente Bibliografico (APA)</div>
+          <textarea class="input-red input-apa-origen" placeholder="Cita APA del Objeto de Estudio..." oninput="validarFormatoAPA(this); actualizarListaReferencias();"></textarea>
+        </div>
+
+        <div class="col-item">
+          <div class="box-instruction-black no-margin">
+            <div class="instruction-heading clean-margin">DEFINICIÓN variable propósito disciplinar</div>
+          </div>
+          <textarea class="input-red def-proposito-origen" placeholder="Ingrese definición..."></textarea>
+          <div class="label-bottom">Referente Bibliografico (APA)</div>
+          <textarea class="input-red input-apa-origen" placeholder="Cita APA del Propósito Disciplinar..." oninput="validarFormatoAPA(this); actualizarListaReferencias();"></textarea>
+        </div>
+
+        <div class="col-item">
+          <div class="box-instruction-black no-margin">
+            <div class="instruction-heading clean-margin">DEFINICIÓN variable audiencia</div>
+          </div>
+          <textarea class="input-red def-audiencia-origen" placeholder="Ingrese definición..."></textarea>
+          <div class="label-bottom">Referente Bibliografico (APA)</div>
+          <textarea class="input-red input-apa-origen" placeholder="Cita APA de Audiencia..." oninput="validarFormatoAPA(this); actualizarListaReferencias();"></textarea>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ================= PARTE 2: PREGUNTA PROBLEMA ================= -->
+    <div class="section-banner" style="margin-top: 25px;">PREGUNTA PROBLEMA</div>
+    
+    <div class="outer-frame">
+      <p class="section-desc">
+        Se busca <strong>indagar, obtener y generar nuevo conocimiento</strong> sobre un tema específico, proceso que se denomina <strong>formulación del problema</strong>. Esta fase es crucial para plantear de manera concreta y específica qué se va a investigar, <strong>delimitando</strong> la temática de investigación, las competencias y habilidades relacionadas con la comunicación visual, y su temporalidad.
+      </p>
+
+      <div class="question-row">
+        <span class="question-mark">¿</span>
+        
+        <div class="q-keyword-box">
+          <textarea class="input-red" rows="2" placeholder="Cómo, dónde..."></textarea>
+          <div class="sub-caption">Cómo, donde, porqué, para qué, etc</div>
+        </div>
+
+        <div class="q-replica-box">
+         <input type="text" class="input-black-replica pregunta-titulo-replica" readonly placeholder="Se replicará automáticamente el título generado en la dinámica...">
+        </div>
+
+        <span class="question-mark">?</span>
+      </div>
+
+      <div style="margin-top: 15px;">
+        <textarea class="input-red pregunta-problema-origen" rows="3" placeholder="Redactar a partir de un Cómo, para qué, Porqué, etc, y el Título del proyecto..."></textarea>
+        <div class="footer-instruction" style="margin-bottom: 0;">
+          texto para validar
+        </div>
+      </div>
+    </div>
+
+    <p class="section-desc" style="margin: 20px 10px; font-style: normal;">
+      En consecuencia, la etapa de <strong>Observación</strong> es el momento de estudiar el problema con mucha atención para adquirir conocimiento sobre su comportamiento o sus características. Le sigue la etapa de <strong>Reflexión</strong>, donde se considera el problema para comprobar la hipótesis, estudiarlo a fondo y comprender la realidad objeto de estudio.
+    </p>
+
+    <!-- ================= BASES DE DATOS ACADÉMICAS ================= -->
+    <div class="section-banner">BASES DE DATOS ACADÉMICAS</div>
+
+    <div class="outer-frame">
+      <p class="section-desc" style="margin-bottom: 15px;">
+        Son plataformas digitales que almacenan, organizan y permiten acceder a información científica y académica como artículos, libros, tesis y revistas especializadas. Estas bases de datos son necesarias para realizar investigaciones confiables, encontrar información actualizada, citar fuentes validadas y construir conocimiento con base en evidencia científica. A continuación alguna de las bases de datos de acceso libre (Open Access):
+      </p>
+
+      <div class="grid-2-db">
+        <div class="db-item">
+          <input type="checkbox" id="db-scholar">
+          <div>
+            <label for="db-scholar" class="db-title">Google Scholar</label>
+            <a href="https://scholar.google.com/" target="_blank" class="db-link">(https://scholar.google.com/)</a>
+            <span class="db-tag">Varios idiomas</span>
+            <p class="db-desc">Multidisciplinaria. Ideal para comenzar cualquier búsqueda.</p>
+          </div>
+        </div>
+
+        <div class="db-item">
+          <input type="checkbox" id="db-eric">
+          <div>
+            <label for="db-eric" class="db-title">ERIC – Education Resources Information Center</label>
+            <a href="https://eric.ed.gov/" target="_blank" class="db-link">(https://eric.ed.gov/)</a>
+            <span class="db-tag">Inglés</span>
+            <p class="db-desc">Mantenido por el Departamento de Educación de EE. UU.</p>
+          </div>
+        </div>
+
+        <div class="db-item">
+          <input type="checkbox" id="db-redalyc">
+          <div>
+            <label for="db-redalyc" class="db-title">Redalyc</label>
+            <a href="https://www.redalyc.org/" target="_blank" class="db-link">(https://www.redalyc.org/)</a>
+            <span class="db-tag">Español, portugués</span>
+            <p class="db-desc">Publicaciones de revistas científicas de América Latina, el Caribe, España y Portugal.</p>
+          </div>
+        </div>
+
+        <div class="db-item">
+          <input type="checkbox" id="db-pubmed">
+          <div>
+            <label for="db-pubmed" class="db-title">PubMed</label>
+            <a href="https://pubmed.ncbi.nlm.nih.gov/" target="_blank" class="db-link">(https://pubmed.ncbi.nlm.nih.gov/)</a>
+            <span class="db-tag">Inglés</span>
+            <p class="db-desc">Gestionado por la Biblioteca Nacional de Medicina de EE. UU.</p>
+          </div>
+        </div>
+
+        <div class="db-item">
+          <input type="checkbox" id="db-scielo">
+          <div>
+            <label for="db-scielo" class="db-title">Scielo</label>
+            <a href="https://scielo.org/" target="_blank" class="db-link">(https://scielo.org/)</a>
+            <span class="db-tag">Español, portugués, inglés</span>
+            <p class="db-desc">Multipaís, fuerte en producción latinoamericana.</p>
+          </div>
+        </div>
+
+        <div class="db-item">
+          <input type="checkbox" id="db-doaj">
+          <div>
+            <label for="db-doaj" class="db-title">DOAJ – Directory of Open Access Journals</label>
+            <a href="https://www.doaj.org/" target="_blank" class="db-link">(https://www.doaj.org/)</a>
+            <span class="db-tag">Inglés, otros</span>
+            <p class="db-desc">Revistas evaluadas por calidad editorial, todas en acceso abierto.</p>
+          </div>
+        </div>
+
+        <div class="db-item">
+          <input type="checkbox" id="db-dialnet">
+          <div>
+            <label for="db-dialnet" class="db-title">Dialnet</label>
+            <a href="https://dialnet.unirioja.es/" target="_blank" class="db-link">(https://dialnet.unirioja.es/)</a>
+            <span class="db-tag">Español</span>
+            <p class="db-desc">Revistas evaluadas por calidad editorial, todas en acceso abierto.</p>
+          </div>
+        </div>
+
+        <div class="db-item">
+          <input type="checkbox" id="db-zenodo">
+          <div>
+            <label for="db-zenodo" class="db-title">Zenodo</label>
+            <a href="https://zenodo.org/" target="_blank" class="db-link">(https://zenodo.org/)</a>
+            <span class="db-tag">Inglés, otros</span>
+            <p class="db-desc">Multidisciplinaria. Artículos, datasets, presentaciones.</p>
+          </div>
+        </div>
+
+        <div class="db-item">
+          <input type="checkbox" id="db-base">
+          <div>
+            <label for="db-base" class="db-title">BASE – Bielefeld Academic Search Engine</label>
+            <a href="https://www.base-search.net/" target="_blank" class="db-link">(https://www.base-search.net/)</a>
+            <span class="db-tag">Varios idiomas</span>
+            <p class="db-desc">Indiza contenido de repositorios institucionales y editoriales científicas.</p>
+          </div>
+        </div>
+
+        <div class="db-item" style="align-items: center;">
+          <input type="checkbox" id="db-otras">
+          <span class="db-title" style="margin-right: 8px;">OTRAS</span>
+          <input type="text" class="input-red" style="padding: 4px;" placeholder="Especifique otras bases...">
+        </div>
+      </div>
+
+      <div class="sub-banner">BASES DE DATOS POR SUSCRIPCIÓN (acceso institucional o pago)</div>
+
+      <div class="grid-2-db">
+        <div class="db-item">
+          <input type="checkbox" id="db-scopus">
+          <div>
+            <label for="db-scopus" class="db-title">Scopus</label>
+            <a href="https://www.scopus.com/" target="_blank" class="db-link">(https://www.scopus.com/)</a>
+            <p class="db-desc">Multidisciplinaria. Muy usada para análisis bibliométricos y citaciones.</p>
+          </div>
+        </div>
+
+        <div class="db-item">
+          <input type="checkbox" id="db-springer">
+          <div>
+            <label for="db-springer" class="db-title">SpringerLink</label>
+            <a href="https://link.springer.com/" target="_blank" class="db-link">(https://link.springer.com/)</a>
+            <p class="db-desc">Ciencias naturales, sociales, educación y más.</p>
+          </div>
+        </div>
+
+        <div class="db-item">
+          <input type="checkbox" id="db-wos">
+          <div>
+            <label for="db-wos" class="db-title">Web of Science (WoS)</label>
+            <a href="https://www.webofscience.com/" target="_blank" class="db-link">(https://www.webofscience.com/)</a>
+            <p class="db-desc">Multidisciplinaria. Permite análisis de impacto y tendencias.</p>
+          </div>
+        </div>
+
+        <div class="db-item">
+          <input type="checkbox" id="db-ebsco">
+          <div>
+            <label for="db-ebsco" class="db-title">EBSCOhost</label>
+            <a href="https://www.ebsco.com/" target="_blank" class="db-link">(https://www.ebsco.com/)</a>
+            <p class="db-desc">Educación, salud, negocios, humanidades y más.</p>
+          </div>
+        </div>
+
+        <div class="db-item">
+          <input type="checkbox" id="db-sciencedirect">
+          <div>
+            <label for="db-sciencedirect" class="db-title">ScienceDirect</label>
+            <a href="https://www.sciencedirect.com/" target="_blank" class="db-link">(https://www.sciencedirect.com/)</a>
+            <p class="db-desc">Ciencias exactas, sociales, salud, ingeniería.</p>
+          </div>
+        </div>
+
+        <div class="db-item">
+          <input type="checkbox" id="db-jstor">
+          <div>
+            <label for="db-jstor" class="db-title">JSTOR</label>
+            <a href="https://www.jstor.org/" target="_blank" class="db-link">(https://www.jstor.org/)</a>
+            <p class="db-desc">Ideal para investigaciones teóricas o históricas.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ================= NUEVA SECCIÓN: INDICADORES Y SUPUESTO DE ÉXITO ================= -->
+    <div style="margin-top: 25px;">
+      
+      <!-- RÉPLICA PREGUNTA PROBLEMA (CASILLA NEGRA SUPERIOR) -->
+      <textarea class="input-black-replica pregunta-problema-target" rows="3" readonly placeholder="Se replicará la pregunta problema..."></textarea>
+
+      <!-- CONECTOR VISUAL ARBOL SUPERIOR -->
+      <div class="tree-connector"></div>
+      <div class="center-line"></div>
+
+      <!-- 3 CASILLAS NEGRAS DE RÉPLICA DE VARIABLES -->
+      <div class="grid-3" style="margin-top: 5px;">
+        <textarea class="input-black-replica var-objeto-target" rows="2" readonly style="text-align: center;" placeholder="Se replica variable objeto de estudio"></textarea>
+        <textarea class="input-black-replica var-proposito-target" rows="2" readonly style="text-align: center;" placeholder="Se replica variable Propósito disciplinar asignatura NPI"></textarea>
+        <textarea class="input-black-replica var-audiencia-target" rows="2" readonly style="text-align: center;" placeholder="Se replica variable Audiencia"></textarea>
+      </div>
+
+      <!-- TITULOS "INDICADORES DE ÉXITO" CON LÍNEA ENLACE -->
+      <div class="grid-3" style="margin-top: 5px;">
+        <div class="title-with-line">
+          <span>INDICADORES DE ÉXITO</span>
+          <div class="small-center-line"></div>
+        </div>
+        <div class="title-with-line">
+          <span>INDICADORES DE ÉXITO</span>
+          <div class="small-center-line"></div>
+        </div>
+        <div class="title-with-line">
+          <span>INDICADORES DE ÉXITO</span>
+          <div class="small-center-line"></div>
+        </div>
+      </div>
+
+      <!-- BLOQUE DE CONTENEDORES DE INDICADORES (BORDES AZUL/NEGRO EXTERNO + CASILLAS ROJAS a-f) -->
+      <div class="grid-3">
+        
+        <!-- Columna 1 de Indicadores -->
+        <div class="indicators-box">
+          <div class="item-row"><span class="item-letter">a.</span><input type="text" class="input-red ind-obj-a-origen"></div>
+          <div class="item-row"><span class="item-letter">b.</span><input type="text" class="input-red ind-obj-b-origen"></div>
+          <div class="item-row"><span class="item-letter">c.</span><input type="text" class="input-red ind-obj-c-origen"></div>
+          <div class="item-row"><span class="item-letter">d.</span><input type="text" class="input-red ind-obj-d-origen"></div>
+          <div class="item-row"><span class="item-letter">e.</span><input type="text" class="input-red ind-obj-e-origen"></div>
+          <div class="item-row"><span class="item-letter">f.</span><input type="text" class="input-red ind-obj-f-origen"></div>
+        </div>
+
+        <!-- Columna 2 de Indicadores -->
+        <div class="indicators-box">
+          <div class="item-row"><span class="item-letter">a.</span><input type="text" class="input-red ind-pro-a-origen"></div>
+          <div class="item-row"><span class="item-letter">b.</span><input type="text" class="input-red ind-pro-b-origen"></div>
+          <div class="item-row"><span class="item-letter">c.</span><input type="text" class="input-red ind-pro-c-origen"></div>
+          <div class="item-row"><span class="item-letter">d.</span><input type="text" class="input-red ind-pro-d-origen"></div>
+          <div class="item-row"><span class="item-letter">e.</span><input type="text" class="input-red ind-pro-e-origen"></div>
+          <div class="item-row"><span class="item-letter">f.</span><input type="text" class="input-red ind-pro-f-origen"></div>
+        </div>
+
+        <!-- Columna 3 de Indicadores -->
+        <div class="indicators-box">
+          <div class="item-row"><span class="item-letter">a.</span><input type="text" class="input-red ind-aud-a-origen"></div>
+          <div class="item-row"><span class="item-letter">b.</span><input type="text" class="input-red ind-aud-b-origen"></div>
+          <div class="item-row"><span class="item-letter">c.</span><input type="text" class="input-red ind-aud-c-origen"></div>
+          <div class="item-row"><span class="item-letter">d.</span><input type="text" class="input-red ind-aud-d-origen"></div>
+          <div class="item-row"><span class="item-letter">e.</span><input type="text" class="input-red ind-aud-e-origen"></div>
+          <div class="item-row"><span class="item-letter">f.</span><input type="text" class="input-red ind-aud-f-origen"></div>
+        </div>
+
+      </div>
+
+      <!-- LÍNEAS CONECTORAS INFERIORES -->
+      <div class="tree-connector-up"></div>
+      <div class="center-line"></div>
+
+      <!-- SUPUESTO DE ÉXITO DEL PROYECTO -->
+      <div class="title-label" style="text-transform: uppercase; margin-top: 4px;">SUPUESTO DE ÉXITO DEL PROYECTO</div>
+      <textarea class="input-red supuesto-origen" rows="3" placeholder="Redactar el supuesto de éxito del proyecto..."></textarea>
+
+      <!-- TEXTO EXPLICATIVO FINAL -->
+      <p class="section-desc" style="margin-top: 15px; font-style: normal;">
+        En el inicio de la investigación, es crucial definir los <strong>"elementos"</strong> y las <strong>"conexiones"</strong> que conformarán un modelo unificado para el equipo de trabajo. Esta claridad conceptual facilitará la aplicación práctica, permitiendo una fácil identificación de los módulos que se pueden transformar mentalmente. De esta manera, se logrará integrar de forma efectiva las <strong>competencias de cada equipo</strong> en las fases de <strong>observación, reflexión y acción del proyecto</strong>.
+      </p>
+
+    </div>
+<!-- ================= PARTE 3: OBSERVAR & INTRODUCCIÓN ================= -->
+    <div id="seccion-observacion" class="section-banner" style="margin-top: 35px;">
+  	FASE DE OBSERVACIÓN
+	</div>
+    
+    <div class="outer-frame">
+      <p class="section-desc">
+        Dentro de la fase de observación del proyecto, la prioridad es estructurar un equipo de trabajo cuyas competencias no solo sean competitivas, sino también acordes al nivel académico de aprendizaje. Esta alineación es clave para alcanzar el primer objetivo específico, impulsando las actividades y definiendo los alcances del proceso creativo. Mediante ejercicios específicos, se investigará a fondo el planteamiento y la justificación del problema, obteniendo la información indispensable para el desarrollo de los objetivos y la revisión exhaustiva de la temática. Simultáneamente, se fortalecerá la práctica profesional y la capacidad del grupo para interactuar con las características generales de los futuros consumidores o destinatarios de nuestra propuesta de diseño.
+      </p>
+      <p class="section-desc">
+        El objetivo es proporcionar una visión general aproximativa de la realidad y de los recursos que, como señalan Narváez et al. (2020), pueden optimizar la organización. Esto integra la práctica pedagógica como una manifestación del pensamiento creativo, diseñada para inculcar una actitud de confianza y responsabilidad en las actividades grupales. Dicha estrategia busca crear un incentivo sostenido que, según Penagos (2015), potencie la motivación intrínseca de los estudiantes en sus procesos de investigación y mitigue la limitada participación investigativa en la disciplina.
+      </p>
+      <p class="section-desc">
+        Conforme a Narváez (2020), esta fase implica definir las posibilidades para iniciar la observación de hechos, fenómenos y sus causalidades, con el fin de adquirir la información necesaria y evidenciar aspectos relevantes. Las competencias desarrolladas en esta etapa de observación son cruciales para que el estudiante adquiera habilidades que le permitan comprender y aplicar metodologías pertinentes para su futuro desempeño profesional, fomentando estilos que contribuyan a la construcción de conceptos o fundamentos de innovación.
+      </p>
+
+      <blockquote class="question-guide-box">
+        ¿Qué se sabe de la oportunidad del problema que se investiga y qué se quiere saber? Es preciso apoyar con referencias bibliográficas respondiendo cuestionamientos que dan razón y exponen los términos del artículo. Se puede formular una pregunta, que luego será respondida detalladamente a medida de que el artículo sea desarrollado.
+      </blockquote>
+
+      <!-- BANNER INTRODUCCION -->
+      <div id="seccion_introduccion" class="section-banner" style="margin-top: 15px; margin-bottom: 15px;">INTRODUCCIÓN</div>
+
+      <!-- INTRODUCCIÓN A 2 COLUMNAS -->
+      <div class="grid-2-intro">
+        <!-- Columna 1: Planteamiento -->
+        <div>
+          <p class="section-desc">
+            La formulación del problema requiere la descripción de la situación que da origen al proyecto, justificando la oportunidad o el diagnóstico de su temática. Esta descripción debe presentarse en cifras medibles y comparables, las cuales generalmente evidencian las carencias o ausencias de un producto, bien o servicio en la comunidad. Tal como menciona Pérez A. (2009), el planteamiento debe captar el interés del lector y orientar la investigación hacia un orden más lógico y coherente. En este sentido, se busca indagar y adquirir conocimiento sobre las variables de estudio para obtener una comprensión más exacta y nítida.
+          </p>
+
+          <!-- Diagrama Planteamiento -->
+          <div class="diagram-box">
+            <div class="diagram-main-node">Planteamiento<br>del problema</div>
+            <div class="diagram-branches">
+              <div class="branch-item">
+                <strong>Identificación</strong><br>
+                <span>Oportunidad y diagnóstico</span>
+              </div>
+              <div class="branch-item">
+                <strong>Descripción de la realidad</strong><br>
+                <span>Cifras medibles y comparables</span>
+              </div>
+              <div class="branch-item">
+                <strong>Elementos de solución</strong><br>
+                <span>Diferentes indicadores de propuesta</span>
+              </div>
+              <div class="branch-item">
+                <strong>Formulación del conocimiento</strong><br>
+                <span>Indagar, obtener y generación del nuevo conocimiento sobre el tema</span>
+              </div>
+            </div>
+          </div>
+
+          <p class="section-desc" style="margin-top: 10px;">
+            Adicionalmente, una formulación efectiva del problema implica la capacidad de proponer alternativas de solución (subproblemas). Esto demanda una vasta información, un proceso de indagación riguroso y un alto nivel de conocimiento de las variables involucradas. Se trata de construir un problema que, en palabras de Restrepo B. (2009), el futuro profesional enfrentará en su ejercicio diario, y cuya solución requerirá una formación integral en teoría y praxis.
+          </p>
+        </div>
+
+        <!-- Columna 2: Justificación -->
+        <div>
+          <p class="section-desc">
+            Toda investigación posee una razón de ser, un "porqué" fundamental. Como señala Pérez A. (2009), esta se sustenta en una fundamentación teórica que revela el motivo de la investigación: su utilidad y la demostración de su razonabilidad. Es crucial centrarse en el propósito de la asignatura principal, ya que esta describe la pertinencia disciplinar y la contribución que ofrecerá a la sociedad. Por ello, se expone la necesidad, destreza, amenaza o habilidad que impulsa la investigación, sentando las bases y principios para el desarrollo de la comunidad, la región o su relevancia a nivel global.
+          </p>
+
+          <!-- Diagrama Justificación -->
+          <div class="diagram-box">
+            <div class="diagram-main-node">Justificación de<br>la Investigación</div>
+            <div class="diagram-branches">
+              <div class="branch-item">
+                <strong>Motivo</strong><br>
+                <span>Necesidad, destreza, amenaza o habilidad</span>
+              </div>
+              <div class="branch-item">
+                <strong>Beneficios</strong><br>
+                <span>Aporte o utilidad de la investigación</span>
+              </div>
+              <div class="branch-item">
+                <strong>Intereses</strong><br>
+                <span>Importancia de la investigación</span>
+              </div>
+            </div>
+          </div>
+
+          <p class="section-desc" style="margin-top: 10px;">
+            Se debe identificar claramente cuál será el aporte o la utilidad del proyecto, que se traduce en los resultados esperados y los beneficios. Aquí se define la posible solución a una realidad existente en una comunidad o individuo. Esto se evidencia a través de un proyecto, ya sea de carácter económico o social, donde se aportará una solución de manera sistemática, ordenada y bajo parámetros empíricos o conceptuales de la actividad proyectual. Es precisamente en este espacio, según Ramírez T. (2010), donde se debe convencer a terceros de la importancia de invertir tiempo, esfuerzo y dinero. En síntesis, se deben aclarar los beneficios y los beneficiarios de los resultados que se obtendrán de la investigación propuesta.
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ================= PLANTEAMIENTO DEL PROBLEMA DINÁMICO ================= -->
+<div class="section-card-container">
+  <div class="box-instruction-black">
+    <div class="instruction-heading">PLANTEAMIENTO DEL PROBLEMA</div>
+  </div>
+  
+  <!-- Contenedor dinámico de fichas -->
+  <div id="contenedor-planteamiento" class="grid-fichas-dinamicas"></div>
+
+  <!-- Botón para agregar más fichas -->
+  <button type="button" class="btn-add-card" onclick="agregarFicha('contenedor-planteamiento', 'planteamiento')">
+    + Agregar Ficha de Planteamiento
+  </button>
+</div>
+
+<!-- ================= JUSTIFICACIÓN DINÁMICA ================= -->
+<div class="section-card-container" style="margin-top: 30px;">
+  <div class="box-instruction-black">
+    <div class="instruction-heading">JUSTIFICACIÓN</div>
+  </div>
+
+  <!-- Contenedor dinámico de fichas -->
+  <div id="contenedor-justificacion" class="grid-fichas-dinamicas"></div>
+
+  <!-- Botón para agregar más fichas -->
+  <button type="button" class="btn-add-card" onclick="agregarFicha('contenedor-justificacion', 'justificacion')">
+    + Agregar Ficha de Justificación
+  </button>
+</div>
+<!-- ================= PARTE 4: VALIDACIÓN (PREGUNTA, INDICADORES E HIPÓTESIS) ================= -->
+    <div style="margin-top: 35px;">
+      
+      <!-- PREGUNTA PROBLEMA -->
+      <div class="title-label" style="text-transform: uppercase;">PREGUNTA PROBLEMA</div>
+      <textarea class="input-black-replica pregunta-problema-target" rows="2" readonly style="text-align: center; font-weight: bold;" placeholder="Se replica la pregunta problema redactada..."></textarea>
+
+      <!-- 3 COLUMNAS DE INDICADORES A VALIDAR -->
+      <div class="grid-3" style="margin-top: 20px;">
+        
+        <!-- Columna 1 -->
+        <div class="col-item">
+          <div class="title-with-line" style="margin-bottom: 4px;">INDICADORES DE ÉXITO DE</div>
+          <textarea class="input-black-replica var-objeto-target" rows="2" style="text-align: center; font-size: 10px;" placeholder="[Variable Objeto de Estudio]"></textarea>
+          <div class="small-center-line" style="margin-bottom: 6px;"></div>
+          
+          <div class="indicators-box-validation">
+            <div class="item-row"><span class="item-letter">a.</span><input type="text" class="input-black-replica ind-obj-a-target" readonly placeholder="Se replicará..."></div>
+    <div class="item-row"><span class="item-letter">b.</span><input type="text" class="input-black-replica ind-obj-b-target" readonly placeholder="Se replicará..."></div>
+    <div class="item-row"><span class="item-letter">c.</span><input type="text" class="input-black-replica ind-obj-c-target" readonly placeholder="Se replicará..."></div>
+    <div class="item-row"><span class="item-letter">d.</span><input type="text" class="input-black-replica ind-obj-d-target" readonly placeholder="Se replicará..."></div>
+    <div class="item-row"><span class="item-letter">e.</span><input type="text" class="input-black-replica ind-obj-e-target" readonly placeholder="Se replicará..."></div>
+    <div class="item-row"><span class="item-letter">f.</span><input type="text" class="input-black-replica ind-obj-f-target" readonly placeholder="Se replicará..."></div>
+          </div>
+        </div>
+
+        <!-- Columna 2 -->
+        <div class="col-item">
+          <div class="title-with-line" style="margin-bottom: 4px;">INDICADORES DE ÉXITO DE</div>
+          <textarea class="input-black-replica var-proposito-target" rows="2" style="text-align: center; font-size: 10px;" placeholder="[Variable Propósito disciplinar]"></textarea>
+          <div class="small-center-line" style="margin-bottom: 6px;"></div>
+          
+          <div class="indicators-box-validation">
+            <div class="item-row"><span class="item-letter">a.</span><input type="text" class="input-black-replica ind-pro-a-target" readonly placeholder="Se replicará..."></div>
+    <div class="item-row"><span class="item-letter">b.</span><input type="text" class="input-black-replica ind-pro-b-target" readonly placeholder="Se replicará..."></div>
+    <div class="item-row"><span class="item-letter">c.</span><input type="text" class="input-black-replica ind-pro-c-target" readonly placeholder="Se replicará..."></div>
+    <div class="item-row"><span class="item-letter">d.</span><input type="text" class="input-black-replica ind-pro-d-target" readonly placeholder="Se replicará..."></div>
+    <div class="item-row"><span class="item-letter">e.</span><input type="text" class="input-black-replica ind-pro-e-target" readonly placeholder="Se replicará..."></div>
+    <div class="item-row"><span class="item-letter">f.</span><input type="text" class="input-black-replica ind-pro-f-target" readonly placeholder="Se replicará..."></div>
+          </div>
+        </div>
+
+        <!-- Columna 3 -->
+        <div class="col-item">
+          <div class="title-with-line" style="margin-bottom: 4px;">INDICADORES DE ÉXITO DE</div>
+          <textarea class="input-black-replica var-audiencia-target" rows="2" style="text-align: center; font-size: 10px;" placeholder="[Variable Audiencia]"></textarea>
+          <div class="small-center-line" style="margin-bottom: 6px;"></div>
+          
+          <div class="indicators-box-validation">
+            <div class="item-row"><span class="item-letter">a.</span><input type="text" class="input-black-replica ind-aud-a-target" readonly placeholder="Se replicará..."></div>
+    <div class="item-row"><span class="item-letter">b.</span><input type="text" class="input-black-replica ind-aud-b-target" readonly placeholder="Se replicará..."></div>
+    <div class="item-row"><span class="item-letter">c.</span><input type="text" class="input-black-replica ind-aud-c-target" readonly placeholder="Se replicará..."></div>
+    <div class="item-row"><span class="item-letter">d.</span><input type="text" class="input-black-replica ind-aud-d-target" readonly placeholder="Se replicará..."></div>
+    <div class="item-row"><span class="item-letter">e.</span><input type="text" class="input-black-replica ind-aud-e-target" readonly placeholder="Se replicará..."></div>
+    <div class="item-row"><span class="item-letter">f.</span><input type="text" class="input-black-replica ind-aud-f-target" readonly placeholder="Se replicará..."></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- LÍNEA CONECTORA INFERIOR Y SECCIONAL HIPÓTESIS -->
+      <div class="tree-connector-up"></div>
+      <div class="center-line"></div>
+
+      <div class="title-label" style="font-size: 14px; margin-top: 4px; font-weight: bold;">Hipótesis</div>
+      <textarea class="input-black-replica supuesto-target" rows="3" readonly placeholder="Se replicará automáticamente el supuesto de éxito..."></textarea>
+		
+		<!-- ================= PARTE 5: OBJETIVOS ================= -->
+    <div id="seccion_objetivos" class="section-banner" style="margin-top: 35px;">OBJETIVOS</div>
+
+    <div class="outer-frame">
+      <p class="section-desc">
+        Los objetivos son cruciales, ya que establecen el alcance deseado del estudio y lo que se pretende conseguir. Guardan una conexión directa con el planteamiento del problema y funcionan como la guía fundamental para todo el informe. Su formulación se basa en los aspectos clave que se necesitan conocer, medir, analizar, entre otros.
+      </p>
+
+      <!-- SUB-BANNER OBJETIVO GENERAL -->
+      <div class="sub-banner">OBJETIVO GENERAL</div>
+
+      <!-- FILA COMPUESTA DE OBJETIVO GENERAL -->
+      <div class="grid-obj-gen">
+        <div>
+          <input type="text" class="input-red objetivo-verbo-origen" placeholder="Verbo en infinitivo..." style="text-align: center;">
+          <div class="sub-caption" style="text-align: center;">Verbo +</div>
+        </div>
+        <div>
+          <textarea class="input-black-replica titulo-replica-target" rows="2" style="width: 100%;" readonly placeholder="Se replicará automáticamente el título generado en la dinámica..."></textarea>
+          <div class="sub-caption" style="text-align: center;">A partir del qué; temática o aplicación disciplinar + porqué/para qué; Núcleo problemático Integrador + para quién/dónde; Audiencia</div>
+        </div>
+      </div>
+
+      <!-- REDACCIÓN OBJETIVO GENERAL -->
+      <div style="margin-top: 10px;">
+        <textarea class="input-red objetivo-general-origen" rows="3" placeholder="Redactar a partir de Objetivo y título(tema) del proyecto..."></textarea>
+        <div class="footer-instruction">Redactar a partir de Objetivo y título(tema) del proyecto</div>
+        <div id="evaluacion_objetivo_general" class="title-evaluation" aria-live="polite">
+          Escriba el objetivo general para evaluar el verbo y su relación con el título del proyecto.
+        </div>
+      </div>
+
+      <!-- SUB-BANNER OBJETIVOS ESPECÍFICOS -->
+      <div class="sub-banner">OBJETIVOS ESPECÍFICOS</div>
+
+      <!-- CONTENEDOR PRINCIPAL CON EJE IZQUIERDO Y BLOQUES -->
+      <div class="obj-layout-wrapper">
+        
+        <!-- EJE IZQUIERDO (PROYECTO ACA / MÉTODO ORA) -->
+        <div class="ora-flow-sidebar">
+          <div class="sidebar-title">PROYECTO ACA<br><small>Estructura de un artículo</small></div>
+          
+          <div class="flow-step">
+            <span class="step-label">Resumen</span>
+          </div>
+
+          <div class="flow-step-box">
+            <div class="step-desc">Introducción<br><small>Revisión a la literatura</small></div>
+            <div class="ora-badge"><strong>O</strong>bservación</div>
+          </div>
+
+          <div class="flow-arrow">➔</div>
+
+          <div class="flow-step-box">
+            <div class="step-desc">Método<br><small>Análisis de resultados</small></div>
+            <div class="ora-badge"><strong>R</strong>eflexión</div>
+          </div>
+
+          <div class="flow-arrow">➔</div>
+
+          <div class="flow-step-box">
+            <div class="step-desc">Conclusiones<br>Discusiones</div>
+            <div class="ora-badge"><strong>A</strong>plicación</div>
+          </div>
+
+          <div class="flow-step" style="margin-top: 8px;">
+            <span class="step-label">Referentes Bibliográficos</span>
+          </div>
+        </div>
+
+        <!-- BLOQUES DE OBJETIVOS ESPECÍFICOS -->
+        <div class="obj-blocks-container">
+          
+          <!-- OBJETIVO ESPECÍFICO 1 -->
+          <div class="obj-card">
+            <div class="obj-grid-3">
+              <div>
+                <div class="header-title" style="font-size: 10px;">Verbo<br><span class="header-subtitle">(Relación con la Exploración)</span></div>
+                <select class="input-red select-bloom">
+                  <option value="" disabled selected>Seleccione Verbo (Bloom)</option>
+                  <option value="identificar">Identificar</option>
+                  <option value="reconocer">Reconocer</option>
+                  <option value="definir">Definir</option>
+                  <option value="describir">Describir</option>
+                  <option value="explorar">Explorar</option>
+                </select>
+              </div>
+
+              <div>
+                <div class="header-title" style="font-size: 10px;">Variable Objeto de Estudio<br><span class="header-subtitle">(Temática - Aplicación disciplinar)</span></div>
+                <textarea class="input-black-replica var-objeto-target" rows="2" placeholder="Se replica variable objeto de estudio"></textarea>
+              </div>
+
+              <div>
+                <div class="header-title" style="font-size: 10px;">Variable Propósito disciplinar<br><span class="header-subtitle">(Asignatura NPI - Eje disciplinar)</span></div>
+                <textarea class="input-black-replica var-proposito-target" rows="2" placeholder="Se replica variable Propósito disciplinar asignatura NPI"></textarea>
+              </div>
+            </div>
+
+            <div class="tree-connector"></div>
+            <div class="center-line"></div>
+
+            <div class="obj-input-row">
+              <span class="obj-tag">OBJETIVO ESPECÍFICO 1.</span>
+              <textarea class="input-red" rows="2" placeholder="Redactar objetivo específico 1..."></textarea>
+              <span class="cap-tag">Capítulo 1</span>
+            </div>
+          </div>
+
+          <!-- OBJETIVO ESPECÍFICO 2 -->
+          <div class="obj-card">
+            <div class="obj-grid-2">
+              <div>
+                <div class="header-title" style="font-size: 10px;">Verbo<br><span class="header-subtitle">(Relación con la Descripción)</span></div>
+                <select class="input-red select-bloom">
+                  <option value="" disabled selected>Seleccione Verbo (Bloom)</option>
+                  <option value="caracterizar">Caracterizar</option>
+                  <option value="clasificar">Clasificar</option>
+                  <option value="analizar">Analizar</option>
+                  <option value="explicar">Explicar</option>
+                  <option value="comparar">Comparar</option>
+                </select>
+              </div>
+
+              <div>
+                <div class="header-title" style="font-size: 10px;">Variable Objeto de Estudio<br><span class="header-subtitle">(Temática - Aplicación disciplinar)</span></div>
+                <textarea class="input-black-replica var-objeto-target" rows="2" placeholder="Se replica variable objeto de estudio"></textarea>
+              </div>
+
+              <div>
+                <div class="header-title" style="font-size: 10px;">Variable Audiencia<br><span class="header-subtitle">(Comunidad, Organización, Audiencia)</span></div>
+                <textarea class="input-black-replica var-audiencia-target" rows="2" placeholder="Se replica variable Audiencia"></textarea>
+              </div>
+            </div>
+
+            <div class="tree-connector"></div>
+            <div class="center-line"></div>
+
+            <div class="obj-input-row">
+              <span class="obj-tag">OBJETIVO ESPECÍFICO 2.</span>
+              <textarea class="input-red" rows="2" placeholder="Redactar objetivo específico 2..."></textarea>
+              <span class="cap-tag">Capítulo 2</span>
+            </div>
+          </div>
+
+          <!-- OBJETIVO ESPECÍFICO 3 -->
+          <div class="obj-card">
+            <div class="obj-grid-3">
+              <div>
+                <div class="header-title" style="font-size: 10px;">Verbo<br><span class="header-subtitle">(Relación con la Descripción)</span></div>
+                <select class="input-red select-bloom">
+                  <option value="" disabled selected>Seleccione Verbo (Bloom)</option>
+                  <option value="determinar">Determinar</option>
+                  <option value="diseñar">Diseñar</option>
+                  <option value="evaluar">Evaluar</option>
+                  <option value="proponer">Proponer</option>
+                </select>
+              </div>
+
+              <div>
+                <div class="header-title" style="font-size: 10px;">Variable Propósito disciplinar<br><span class="header-subtitle">(Asignatura NPI - Eje disciplinar)</span></div>
+                <textarea class="input-black-replica var-proposito-target" rows="2" placeholder="Se replica variable Propósito disciplinar asignatura NPI"></textarea>
+              </div>
+
+              <div>
+                <div class="header-title" style="font-size: 10px;">Variable Audiencia<br><span class="header-subtitle">(Comunidad, Organización, Audiencia)</span></div>
+                <textarea class="input-black-replica var-audiencia-target" rows="2" placeholder="Se replica variable Audiencia"></textarea>
+              </div>
+
+              <div>
+                <div class="header-title" style="font-size: 10px;">Variable Objeto de Estudio<br><span class="header-subtitle">(Temática - Aplicación disciplinar)</span></div>
+                <textarea class="input-black-replica var-objeto-target" rows="2" placeholder="Se replica variable objeto de estudio"></textarea>
+              </div>
+            </div>
+
+            <div class="tree-connector"></div>
+            <div class="center-line"></div>
+
+            <div class="obj-input-row">
+              <span class="obj-tag">OBJETIVO ESPECÍFICO 3.</span>
+              <textarea class="input-red" rows="2" placeholder="Redactar objetivo específico 3..."></textarea>
+              <span class="cap-tag">Capítulo 3</span>
+            </div>
+          </div>
+
+          <!-- OBJETIVO ESPECÍFICO 4 -->
+          <div class="obj-card">
+            <div class="obj-grid-3">
+              <div>
+                <div class="header-title" style="font-size: 10px;">Verbo<br><span class="header-subtitle">(Relación con la Descripción)</span></div>
+                <select class="input-red select-bloom">
+                  <option value="" disabled selected>Seleccione Verbo (Bloom)</option>
+                  <option value="validar">Validar</option>
+                  <option value="implementar">Implementar</option>
+                  <option value="comprobar">Comprobar</option>
+                  <option value="sintetizar">Sintetizar</option>
+                </select>
+              </div>
+
+              <div>
+                <div class="header-title" style="font-size: 10px;">Variable Audiencia<br><span class="header-subtitle">(Comunidad, Organización, Audiencia)</span></div>
+                <textarea class="input-black-replica var-audiencia-target" rows="2" placeholder="Se replica variable Audiencia"></textarea>
+              </div>
+
+              <div>
+                <div class="header-title" style="font-size: 10px;">Variable Propósito disciplinar<br><span class="header-subtitle">(Asignatura NPI - Eje disciplinar)</span></div>
+                <textarea class="input-black-replica var-proposito-target" rows="2" placeholder="Se replica variable Propósito disciplinar asignatura NPI"></textarea>
+              </div>
+
+              <div>
+                <div class="header-title" style="font-size: 10px;">Variable Objeto de Estudio<br><span class="header-subtitle">(Temática - Aplicación disciplinar)</span></div>
+                <textarea class="input-black-replica var-objeto-target" rows="2" placeholder="Se replica variable objeto de estudio"></textarea>
+              </div>
+            </div>
+
+            <div class="tree-connector"></div>
+            <div class="center-line"></div>
+
+            <div class="obj-input-row">
+              <span class="obj-tag">OBJETIVO ESPECÍFICO 4.</span>
+              <textarea class="input-red" rows="2" placeholder="Redactar objetivo específico 4..."></textarea>
+              <span class="cap-tag">Capítulo 4</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+<!-- ================= PARTE 6: REFLEXIONAR ================= -->
+   
+  
+    <div id="seccion-reflexion" class="section-banner" style="margin-top: 35px;">
+  		FASE DE REFLEXIÓN
+	</div>
+
+
+    <div class="outer-frame">
+      <p class="section-desc">
+        La construcción del marco metodológico implica la definición y articulación razonablemente lógica de los métodos y técnicas seleccionados por el investigador para la gestión eficiente del problema de investigación. Un documento investigativo debe contemplar los paradigmas, enfoques, tipologías y diseños apropiados a la disciplina para el análisis de los datos, vinculando la teoría, conceptos y referentes que sustentan los fundamentos de la investigación, delineando su contenido intelectual. La terminología ha de ser organizada y entrelazada con base en su relevancia o su proceso analítico, sistemático y objetivo, con el propósito de responder a la pregunta formulada y expandir el caudal de conocimiento e información.
+      </p>
+
+      <!-- METODOLOGÍA -->
+      <a id="seccion_metodologia" class="sub-banner sub-banner-link" href="https://drive.google.com/file/d/1hRZsXp79vKEPOf-mlZCwMBLkD6REjnGs/view" target="_blank" rel="noopener noreferrer">METODOLOGÍA</a>
+      
+      <p class="section-desc">
+        La metodología se refiere al compendio de aspectos operativos inherentes al proceso investigativo. Se enfoca en el estudio lógico de los métodos, abordando desde su origen, fundamentación, ética y racionalidad, hasta su capacidad explicativa, utilidad práctica y los mecanismos de control que utiliza y donde se agrupa los procedimientos y actividades organizadas para cumplir los objetivos y/o propósitos de la investigación.
+      </p>
+
+      <textarea class="input-black-replica objetivo-general-target" rows="2" readonly style="text-align: center; font-weight: bold; margin-top: 5px;" placeholder="Se replica el Objetivo general"></textarea>
+
+      <!-- OPERACIONALIZACIÓN DE VARIABLES -->
+      <div class="sub-banner" style="margin-top: 20px;">OPERACIONALIZACIÓN DE VARIABLES</div>
+
+      <p class="section-desc">
+        La operacionalización de las variables, que se lleva a cabo en la fase de reflexión, consiste en definir los <strong>indicadores concretos</strong> que permitirán medir el éxito y el desarrollo del proyecto, asegurando su alineación con los objetivos. Esta etapa es fundamental para analizar cómo cada variable se convierte en una acción específica dentro del proceso de investigación, garantizando su coherencia y viabilidad.<br><br>
+        Una vez operacionalizadas las variables, se procede a la <strong>validación del instrumento</strong> de medición (por ejemplo, un cuestionario). Este proceso de verificación garantiza que cada pregunta responda a los objetivos de la investigación. Para ello, se revisa la claridad de los ítems, su conexión con las variables y la consistencia en la medición de los indicadores de éxito. En definitiva, la validación asegura que el instrumento esté adecuadamente estructurado para recopilar la información necesaria y evaluar el impacto del <strong>Método ORA</strong> en el proyecto.
+      </p>
+
+      <!-- ENFOQUE GENERAL DE LA INVESTIGACIÓN -->
+      <div class="outer-frame" style="margin-top: 10px; padding: 10px;">
+        <div class="grid-3">
+          <div>
+            <div class="header-title" style="font-size: 10px;">ENFOQUE DE LA INVESTIGACIÓN</div>
+            <select class="input-red enfoque-general-select">
+              <option value="" disabled selected>Seleccione enfoque...</option>
+              <option value="cualitativa">Cualitativa</option>
+              <option value="cuantitativa">Cuantitativa</option>
+              <option value="mixta">Mixta</option>
+            </select>
+          </div>
+
+          <div>
+            <div class="header-title" style="font-size: 10px;">DEFINICIÓN DEL ENFOQUE DE LA INVESTIGACIÓN</div>
+            <textarea class="input-red" rows="3" placeholder="Ingrese definición del enfoque..."></textarea>
+          </div>
+
+          <div>
+            <div class="header-title" style="font-size: 10px;">Referente Bibliográfico (APA)</div>
+            <textarea class="input-red" rows="3" placeholder="Ingrese referente APA..."></textarea>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ================= VARIABLE INDEPENDIENTE ================= -->
+    <div class="sub-banner-line">Variable Independiente</div>
+    
+    <div class="outer-frame">
+      
+      <!-- CONTROLES SUPERIORES (ENFOQUE, ESENCIA, TIPO) -->
+      <div class="grid-op-controls">
+        <div class="enfoque-box variable-enfoque-box">
+          <span class="ctrl-label">ENFOQUE</span>
+          <div class="radio-group">
+            <label><input type="radio" name="enfoque_vi" value="cuantitativo" onchange="window.actualizarEsenciasPorEnfoque?.()"> CUANTITATIVO</label>
+            <label><input type="radio" name="enfoque_vi" value="cualitativo" onchange="window.actualizarEsenciasPorEnfoque?.()"> CUALITATIVO</label>
+          </div>
+        </div>
+
+        <div>
+          <span class="ctrl-label">ESENCIA</span>
+          <select class="input-red esencia-select">
+            <option value="" disabled selected>Botón desplegable esencia</option>
+            <option value="explora">Explorar</option>
+            <option value="describir">Describir</option>
+            <option value="explicar">Explicar</option>
+            <option value="predecir">Predecir</option>
+            <option value="evaluar">Evaluar</option>
+            <option value="verificar">Verificar</option>
+            <option value="comprender">Comprender</option>
+            <option value="interpretar">Interpretar</option>
+            <option value="reflexionar">Reflexionar</option>
+          </select>
+        </div>
+
+        <div>
+          <span class="ctrl-label">TIPO DE INVESTIGACIÓN</span>
+          <select class="input-red">
+            <option value="" disabled selected>Botón desplegable tipo de investigación</option>
+            <option value="analitico">Analítico</option>
+            <option value="explicativo">Explicativo</option>
+            <option value="comparativo">Comparativo</option>
+            <option value="predictivo">Predictivo</option>
+            <option value="proyectivo">Proyectivo</option>
+            <option value="descriptivo">Descriptivo</option>
+            <option value="correlacional">Correlacional</option>
+            <option value="evaluativo">Evaluativo</option>
+            <option value="decampo">De campo</option>
+            <option value="flexible">Flexible</option>
+            <option value="etnografico">Etnográfico</option>
+            <option value="hermeneutico">Hermenéutico</option>
+            <option value="bibliografico">Bibliográfico</option>
+            <option value="documental">Documental</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- MATRIZ OPERACIONAL DE LA VARIABLE -->
+      <div class="grid-op-matrix" style="margin-top: 15px;">
+        <!-- REPLICA VARIABLE Y DEFINICION -->
+        <div class="op-var-col">
+          <div class="header-title" style="font-size: 10px;">Variable Objeto de Estudio<br><span class="header-subtitle">(Temática - Aplicación disciplinar)</span></div>
+          <textarea class="input-black-replica var-objeto-target" rows="2" placeholder="Se replica variable objeto de estudio"></textarea>
+          
+          <div class="box-instruction-black" style="margin-top: 6px;">
+            <div class="instruction-heading">DEFINICIÓN</div>
+          </div>
+          <textarea class="input-black-replica def-objeto-target" readonly placeholder="Se replicará automáticamente..."></textarea>
+
+    
+        </div>
+
+        <!-- REPLICA INDICADORES -->
+        <div class="op-ind-col">
+          <div class="header-title" style="font-size: 10px; margin-bottom: 12px;">INDICADORES DE ÉXITO</div>
+          <div class="item-row"><span class="item-letter">a.</span><input type="text" class="input-black-replica ind-obj-a-target" readonly placeholder="Se replicará..."></div>
+    <div class="item-row"><span class="item-letter">b.</span><input type="text" class="input-black-replica ind-obj-b-target" readonly placeholder="Se replicará..."></div>
+    <div class="item-row"><span class="item-letter">c.</span><input type="text" class="input-black-replica ind-obj-c-target" readonly placeholder="Se replicará..."></div>
+    <div class="item-row"><span class="item-letter">d.</span><input type="text" class="input-black-replica ind-obj-d-target" readonly placeholder="Se replicará..."></div>
+    <div class="item-row"><span class="item-letter">e.</span><input type="text" class="input-black-replica ind-obj-e-target" readonly placeholder="Se replicará..."></div>
+    <div class="item-row"><span class="item-letter">f.</span><input type="text" class="input-black-replica ind-obj-f-target" readonly placeholder="Se replicará..."></div>
+        </div>
+
+        <!-- ITEMS / PREGUNTAS DEL INSTRUMENTO -->
+        <div class="op-item-col">
+          <div class="header-title" style="font-size: 10px; margin-bottom: 12px;">ÍTEM</div>
+          <div class="q-item-row"><span class="q-symbol">¿</span><input type="text" class="input-red"><span class="q-symbol">?</span></div>
+          <div class="q-item-row"><span class="q-symbol">¿</span><input type="text" class="input-red"><span class="q-symbol">?</span></div>
+          <div class="q-item-row"><span class="q-symbol">¿</span><input type="text" class="input-red"><span class="q-symbol">?</span></div>
+          <div class="q-item-row"><span class="q-symbol">¿</span><input type="text" class="input-red"><span class="q-symbol">?</span></div>
+          <div class="q-item-row"><span class="q-symbol">¿</span><input type="text" class="input-red"><span class="q-symbol">?</span></div>
+          <div class="q-item-row"><span class="q-symbol">¿</span><input type="text" class="input-red"><span class="q-symbol">?</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ================= VARIABLE DEPENDIENTE (PROPÓSITO DISCIPLINAR) ================= -->
+    <div class="sub-banner-line">Variable Dependiente</div>
+    
+    <div class="outer-frame">
+      
+      <!-- CONTROLES -->
+      <div class="grid-op-controls">
+        <div class="enfoque-box variable-enfoque-box">
+          <span class="ctrl-label">ENFOQUE</span>
+          <div class="radio-group">
+            <label><input type="radio" name="enfoque_vd1" value="cuantitativo" onchange="window.actualizarEsenciasPorEnfoque?.()"> CUANTITATIVO</label>
+            <label><input type="radio" name="enfoque_vd1" value="cualitativo" onchange="window.actualizarEsenciasPorEnfoque?.()"> CUALITATIVO</label>
+          </div>
+        </div>
+
+        <div>
+          <span class="ctrl-label">ESENCIA</span>
+          <select class="input-red esencia-select">
+            <option value="" disabled selected>Botón desplegable esencia</option>
+            <option value="explora">Explorar</option>
+            <option value="describir">Describir</option>
+            <option value="explicar">Explicar</option>
+            <option value="predecir">Predecir</option>
+            <option value="evaluar">Evaluar</option>
+            <option value="verificar">Verificar</option>
+            <option value="comprender">Comprender</option>
+            <option value="interpretar">Interpretar</option>
+            <option value="reflexionar">Reflexionar</option>
+          </select>
+        </div>
+
+        <div>
+          <span class="ctrl-label">TIPO DE INVESTIGACIÓN</span>
+          <select class="input-red">
+            <option value="" disabled selected>Botón desplegable tipo de investigación</option>
+            <option value="analitico">Analítico</option>
+            <option value="explicativo">Explicativo</option>
+            <option value="comparativo">Comparativo</option>
+            <option value="predictivo">Predictivo</option>
+            <option value="proyectivo">Proyectivo</option>
+            <option value="descriptivo">Descriptivo</option>
+            <option value="correlacional">Correlacional</option>
+            <option value="evaluativo">Evaluativo</option>
+            <option value="decampo">De campo</option>
+            <option value="flexible">Flexible</option>
+            <option value="etnografico">Etnográfico</option>
+            <option value="hermeneutico">Hermenéutico</option>
+            <option value="bibliografico">Bibliográfico</option>
+            <option value="documental">Documental</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- MATRIZ OPERACIONAL -->
+      <div class="grid-op-matrix" style="margin-top: 15px;">
+        <div class="op-var-col">
+          <div class="header-title" style="font-size: 10px;">Variable Propósito disciplinar<br><span class="header-subtitle">(Asignatura NPI - Eje disciplinar)</span></div>
+          <textarea class="input-black-replica var-proposito-target" rows="2" placeholder="Se replica variable Propósito disciplinar"></textarea>
+          
+          <div class="box-instruction-black" style="margin-top: 6px;">
+            <div class="instruction-heading">DEFINICIÓN</div>
+          </div>
+          <textarea class="input-black-replica def-proposito-target" readonly placeholder="Se replicará automáticamente..."></textarea>
+        </div>
+
+        <div class="op-ind-col">
+          <div class="header-title" style="font-size: 10px; margin-bottom: 12px;">INDICADORES DE ÉXITO</div>
+          <div class="item-row"><span class="item-letter">a.</span><input type="text" class="input-black-replica ind-pro-a-target" readonly placeholder="Se replicará..."></div>
+    <div class="item-row"><span class="item-letter">b.</span><input type="text" class="input-black-replica ind-pro-b-target" readonly placeholder="Se replicará..."></div>
+    <div class="item-row"><span class="item-letter">c.</span><input type="text" class="input-black-replica ind-pro-c-target" readonly placeholder="Se replicará..."></div>
+    <div class="item-row"><span class="item-letter">d.</span><input type="text" class="input-black-replica ind-pro-d-target" readonly placeholder="Se replicará..."></div>
+    <div class="item-row"><span class="item-letter">e.</span><input type="text" class="input-black-replica ind-pro-e-target" readonly placeholder="Se replicará..."></div>
+    <div class="item-row"><span class="item-letter">f.</span><input type="text" class="input-black-replica ind-pro-f-target" readonly placeholder="Se replicará..."></div>
+        </div>
+
+        <div class="op-item-col">
+          <div class="header-title" style="font-size: 10px; margin-bottom: 12px;">ÍTEM</div>
+          <div class="q-item-row"><span class="q-symbol">¿</span><input type="text" class="input-red"><span class="q-symbol">?</span></div>
+          <div class="q-item-row"><span class="q-symbol">¿</span><input type="text" class="input-red"><span class="q-symbol">?</span></div>
+          <div class="q-item-row"><span class="q-symbol">¿</span><input type="text" class="input-red"><span class="q-symbol">?</span></div>
+          <div class="q-item-row"><span class="q-symbol">¿</span><input type="text" class="input-red"><span class="q-symbol">?</span></div>
+          <div class="q-item-row"><span class="q-symbol">¿</span><input type="text" class="input-red"><span class="q-symbol">?</span></div>
+          <div class="q-item-row"><span class="q-symbol">¿</span><input type="text" class="input-red"><span class="q-symbol">?</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ================= VARIABLE DEPENDIENTE (AUDIENCIA) ================= -->
+    <div class="outer-frame" style="margin-top: 15px;">
+      
+      <div class="grid-op-matrix">
+        <div class="op-var-col">
+          <div class="header-title" style="font-size: 10px;">Variable Audiencia<br><span class="header-subtitle">(Comunidad, Organización, Contexto)</span></div>
+          <textarea class="input-black-replica var-audiencia-target" rows="2" placeholder="Se replica variable Audiencia"></textarea>
+          
+          <div class="box-instruction-black" style="margin-top: 6px;">
+            <div class="instruction-heading">DEFINICIÓN</div>
+          </div>
+          <textarea class="input-black-replica def-audiencia-target" readonly placeholder="Se replicará automáticamente..."></textarea>
+        </div>
+
+        <div class="op-ind-col">
+          <div class="header-title" style="font-size: 10px; margin-bottom: 12px;">INDICADORES DE ÉXITO</div>
+          <div class="item-row"><span class="item-letter">a.</span><input type="text" class="input-black-replica ind-aud-a-target" readonly placeholder="Se replicará..."></div>
+    <div class="item-row"><span class="item-letter">b.</span><input type="text" class="input-black-replica ind-aud-b-target" readonly placeholder="Se replicará..."></div>
+    <div class="item-row"><span class="item-letter">c.</span><input type="text" class="input-black-replica ind-aud-c-target" readonly placeholder="Se replicará..."></div>
+    <div class="item-row"><span class="item-letter">d.</span><input type="text" class="input-black-replica ind-aud-d-target" readonly placeholder="Se replicará..."></div>
+    <div class="item-row"><span class="item-letter">e.</span><input type="text" class="input-black-replica ind-aud-e-target" readonly placeholder="Se replicará..."></div>
+    <div class="item-row"><span class="item-letter">f.</span><input type="text" class="input-black-replica ind-aud-f-target" readonly placeholder="Se replicará..."></div>
+        </div>
+
+        <div class="op-item-col">
+          <div class="header-title" style="font-size: 10px; margin-bottom: 12px;">ÍTEM</div>
+          <div class="q-item-row"><span class="q-symbol">¿</span><input type="text" class="input-red"><span class="q-symbol">?</span></div>
+          <div class="q-item-row"><span class="q-symbol">¿</span><input type="text" class="input-red"><span class="q-symbol">?</span></div>
+          <div class="q-item-row"><span class="q-symbol">¿</span><input type="text" class="input-red"><span class="q-symbol">?</span></div>
+          <div class="q-item-row"><span class="q-symbol">¿</span><input type="text" class="input-red"><span class="q-symbol">?</span></div>
+          <div class="q-item-row"><span class="q-symbol">¿</span><input type="text" class="input-red"><span class="q-symbol">?</span></div>
+          <div class="q-item-row"><span class="q-symbol">¿</span><input type="text" class="input-red"><span class="q-symbol">?</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ================= CIERRE METODOLÓGICO: POBLACIÓN, MUESTRA Y TÉCNICA ================= -->
+    <div class="outer-frame" style="margin-top: 15px;">
+      <div class="grid-3" style="grid-template-columns: repeat(4, 1fr);">
+        <div>
+          <div class="title-label" style="font-size: 11px;">POBLACIÓN</div>
+          <input type="number" id="muestreo_poblacion" class="input-red" min="1" step="1" placeholder="Solo números">
+        </div>
+
+        <div>
+          <div class="title-label" style="font-size: 11px;">NIVEL DE CONFIANZA (%)</div>
+          <input type="number" id="muestreo_confianza" class="input-red" min="80" max="99" step="0.1" placeholder="Ej: 95">
+        </div>
+
+        <div>
+          <div class="title-label" style="font-size: 11px;">MARGEN DE ERROR (%)</div>
+          <input type="number" id="muestreo_error" class="input-red" min="1" max="20" step="0.1" placeholder="Ej: 5">
+        </div>
+
+        <div>
+          <div class="title-label" style="font-size: 11px;">MUESTRA</div>
+          <input type="number" id="muestreo_muestra" class="input-black-replica" readonly placeholder="Resultado automático">
+        </div>
+      </div>
+
+      <div class="grid-3" style="margin-top: 15px;">
+        <div style="grid-column: 1 / span 3;">
+          <div class="title-label" style="font-size: 11px;">TÉCNICA DE RECOLECCIÓN DE INFORMACIÓN</div>
+          <select id="tecnica_recoleccion" class="input-red">
+            <option value="" disabled selected>Botón desplegable técnica...</option>
+            <option value="cuestionario">Cuestionario</option>
+            <option value="entrevista">Entrevista</option>
+            <option value="observacion_directa">Observación Directa</option>
+            <option value="grupo_focal">Grupo Focal</option>
+            <option value="analisis_documental">Análisis Documental</option>
+            <option value="encuesta">Encuesta</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="margin-top: 15px;">
+        <input type="url" id="link_instrumento" class="input-red" placeholder="Ingrese el Link del Instrumento de medición...">
+        <div class="label-bottom" style="margin-top: 3px;">Link del Instrumento</div>
+      </div>
+    </div>		
+
+  <!-- ================= PARTE 7: APLICAR ================= -->
+    <div id="seccion-aplicacion" class="section-banner" style="margin-top: 35px;">
+  		FASE DE APLICACIÓN
+	</div>
+
+
+    <div class="outer-frame">
+      <p class="section-desc">
+        La aplicación del conocimiento se materializa en la interpretación crítica de los resultados y la formulación de conclusiones sólidas. La operacionalización de variables permite medir el impacto del método en el proceso investigativo, fortaleciendo las competencias al promover el aprendizaje experiencial en contextos reales.
+      </p>
+
+      <!-- SUB-BANNER ANÁLISIS DE RESULTADOS -->
+      <div id="seccion_resultados" class="sub-banner">ANÁLISIS DE RESULTADOS - Construcción Teórica Pro-positiva</div>
+
+      <!-- ================= BLOQUE 1: VARIABLE OBJETO DE ESTUDIO ================= -->
+      <div class="outer-frame" style="margin-top: 15px;">
+        <div class="grid-var-header">
+          <div>
+            <div class="header-title" style="font-size: 10px;">Variable Objeto de Estudio<br><span class="header-subtitle">(Temática - Aplicación disciplinar)</span></div>
+            <textarea class="input-black-replica var-objeto-target" rows="2" placeholder="Se replica variable objeto de estudio"></textarea>
+          </div>
+          <div>
+            <textarea class="input-red" rows="2" placeholder="Sub título (atractivo para el lector)..."></textarea>
+            <div class="sub-caption" style="text-align: right;">Sub título</div>
+          </div>
+        </div>
+
+        <!-- GRID DE INDICADORES Y ANÁLISIS (a - f) -->
+        <div class="grid-aplicar-pairs" style="margin-top: 15px;">
+          
+          <!-- PAR A - B -->
+          <div class="pair-row">
+            <!-- Indicador a -->
+            <div class="card-analysis">
+              <div class="ind-head-row">
+                <textarea class="input-black-replica ind-obj-a-target" rows="2" placeholder="Se replica indicador &quot;a&quot;..."></textarea>
+                <span class="arrow-right">➔</span>
+              
+              </div>
+              <div class="grid-2-mini" style="margin-top: 5px;">
+                <div>
+                  <div class="header-title" style="font-size: 9px;">DEFINICIÓN</div>
+                  <textarea class="input-red" rows="3" placeholder="Definición..."></textarea>
+                  <div class="header-title" style="font-size: 9px; margin-top: 4px;">Referente Bibliográfico (APA)</div>
+                  <textarea class="input-red" rows="3" placeholder="APA..."></textarea>
+                </div>
+				  <div class="ans-box">
+                  <div class="header-title" style="font-size: 9px;">Análisis de respuesta Ítem 1</div>
+                  <textarea class="input-red" rows="3" placeholder="Análisis..."></textarea>
+                
+                <div class="pronostico-col">
+                  <div class="arrow-down">➔</div>
+                  <div class="header-title" style="font-size: 9px;">Pronóstico</div>
+                  <textarea class="input-red" rows="6" placeholder="Pronóstico..."></textarea>
+                </div>
+				 </div>
+              </div>
+            </div>
+
+            <!-- Indicador b -->
+            <div class="card-analysis">
+              <div class="ind-head-row">
+                <textarea class="input-black-replica ind-obj-b-target" rows="2" placeholder="Se replica indicador &quot;b&quot;..."></textarea>
+                <span class="arrow-right">➔</span>
+                
+              </div>
+              <div class="grid-2-mini" style="margin-top: 5px;">
+                <div>
+                  <div class="header-title" style="font-size: 9px;">DEFINICIÓN</div>
+                  <textarea class="input-red" rows="3" placeholder="Definición..."></textarea>
+                  <div class="header-title" style="font-size: 9px; margin-top: 4px;">Referente Bibliográfico (APA)</div>
+                  <textarea class="input-red" rows="3" placeholder="APA..."></textarea>
+                </div>
+				  <div class="ans-box">
+                  <div class="header-title" style="font-size: 9px;">Análisis de respuesta Ítem 2</div>
+                  <textarea class="input-red" rows="3" placeholder="Análisis..."></textarea>
+                
+                <div class="pronostico-col">
+                  <div class="arrow-down">➔</div>
+                  <div class="header-title" style="font-size: 9px;">Pronóstico</div>
+                  <textarea class="input-red" rows="6" placeholder="Pronóstico..."></textarea>
+                </div>
+				 </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PAR C - D -->
+          <div class="pair-row">
+            <!-- Indicador c -->
+            <div class="card-analysis">
+              <div class="ind-head-row">
+                <textarea class="input-black-replica ind-obj-c-target" rows="2" placeholder="Se replica indicador &quot;c&quot;..."></textarea>
+                <span class="arrow-right">➔</span>
+                <div class="ans-box"> </div>
+              </div>
+              <div class="grid-2-mini" style="margin-top: 5px;">
+                <div>
+                  <div class="header-title" style="font-size: 9px;">DEFINICIÓN</div>
+                  <textarea class="input-red" rows="3" placeholder="Definición..."></textarea>
+                  <div class="header-title" style="font-size: 9px; margin-top: 4px;">Referente Bibliográfico (APA)</div>
+                  <textarea class="input-red" rows="3" placeholder="APA..."></textarea>
+                </div>
+                <div class="pronostico-col">
+<div class="header-title" style="font-size: 9px;">Análisis de respuesta Ítem 3</div>
+                  <textarea class="input-red" rows="3" placeholder="Análisis..."></textarea>
+                  <div class="header-title" style="font-size: 9px;">
+                    <div class="arrow-down">➔</div>
+                  Pronóstico</div>
+                  <textarea class="input-red" rows="6" placeholder="Pronóstico..."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Indicador d -->
+            <div class="card-analysis">
+              <div class="ind-head-row">
+                <textarea class="input-black-replica ind-obj-d-target" rows="2" placeholder="Se replica indicador &quot;d&quot;..."></textarea>
+                <span class="arrow-right">➔</span>
+                <div class="ans-box"> </div>
+              </div>
+              <div class="grid-2-mini" style="margin-top: 5px;">
+                <div>
+                  <div class="header-title" style="font-size: 9px;">DEFINICIÓN</div>
+                  <textarea class="input-red" rows="3" placeholder="Definición..."></textarea>
+                  <div class="header-title" style="font-size: 9px; margin-top: 4px;">Referente Bibliográfico (APA)</div>
+                  <textarea class="input-red" rows="3" placeholder="APA..."></textarea>
+                </div>
+                <div class="pronostico-col">
+<div class="header-title" style="font-size: 9px;">Análisis de respuesta Ítem 4</div>
+                  <textarea class="input-red" rows="3" placeholder="Análisis..."></textarea>
+                  <div class="header-title" style="font-size: 9px;">
+                    <div class="arrow-down">➔</div>
+                  Pronóstico</div>
+                  <textarea class="input-red" rows="6" placeholder="Pronóstico..."></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PAR E - F -->
+          <div class="pair-row">
+            <!-- Indicador e -->
+            <div class="card-analysis">
+              <div class="ind-head-row">
+                <textarea class="input-black-replica ind-obj-e-target" rows="2" placeholder="Se replica indicador &quot;e&quot;..."></textarea>
+                <span class="arrow-right">➔</span>
+                <div class="ans-box"> </div>
+              </div>
+              <div class="grid-2-mini" style="margin-top: 5px;">
+                <div>
+                  <div class="header-title" style="font-size: 9px;">DEFINICIÓN</div>
+                  <textarea class="input-red" rows="3" placeholder="Definición..."></textarea>
+                  <div class="header-title" style="font-size: 9px; margin-top: 4px;">Referente Bibliográfico (APA)</div>
+                  <textarea class="input-red" rows="3" placeholder="APA..."></textarea>
+                </div>
+                <div class="pronostico-col">
+<div class="header-title" style="font-size: 9px;">Análisis de respuesta Ítem 5</div>
+                  <textarea class="input-red" rows="3" placeholder="Análisis..."></textarea>
+                  <div class="header-title" style="font-size: 9px;">
+                    <div class="arrow-down">➔</div>
+                  Pronóstico</div>
+                  <textarea class="input-red" rows="6" placeholder="Pronóstico..."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Indicador f -->
+            <div class="card-analysis">
+              <div class="ind-head-row">
+                <textarea class="input-black-replica ind-obj-f-target" rows="2" placeholder="Se replica indicador &quot;f&quot;..."></textarea>
+                <span class="arrow-right">➔</span>
+                <div class="ans-box"> </div>
+              </div>
+              <div class="grid-2-mini" style="margin-top: 5px;">
+                <div>
+                  <div class="header-title" style="font-size: 9px;">DEFINICIÓN</div>
+                  <textarea class="input-red" rows="3" placeholder="Definición..."></textarea>
+                  <div class="header-title" style="font-size: 9px; margin-top: 4px;">Referente Bibliográfico (APA)</div>
+                  <textarea class="input-red" rows="3" placeholder="APA..."></textarea>
+                </div>
+                <div class="pronostico-col">
+<div class="header-title" style="font-size: 9px;">Análisis de respuesta Ítem 6</div>
+                  <textarea class="input-red" rows="3" placeholder="Análisis..."></textarea>
+                  <div class="header-title" style="font-size: 9px;">
+                    <div class="arrow-down">➔</div>
+                  Pronóstico</div>
+                  <textarea class="input-red" rows="6" placeholder="Pronóstico..."></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+		
+	<!-- ================= BLOQUE 2: VARIABLE PROPOSITO DISCIPLINAR ================= -->
+      <div class="outer-frame" style="margin-top: 15px;">
+        <div class="grid-var-header">
+          <div>
+            <div class="header-title" style="font-size: 10px;">Variable Proposito disciplinar<br><span class="header-subtitle">(Asignatura NIP - Eje disciplinar)</span></div>
+            <textarea class="input-black-replica var-proposito-target" rows="2" placeholder="Se replica variable Propósito disciplinar"></textarea>
+          </div>
+          <div>
+            <textarea class="input-red" rows="2" placeholder="Sub título (atractivo para el lector)..."></textarea>
+            <div class="sub-caption" style="text-align: right;">Sub título</div>
+          </div>
+        </div>
+
+        <!-- GRID DE INDICADORES Y ANÁLISIS (a - f) -->
+        <div class="grid-aplicar-pairs" style="margin-top: 15px;">
+          
+          <!-- PAR A - B -->
+          <div class="pair-row">
+            <!-- Indicador a -->
+            <div class="card-analysis">
+              <div class="ind-head-row">
+                <textarea class="input-black-replica ind-pro-a-target" rows="2" placeholder="Se replica indicador &quot;a&quot;..."></textarea>
+                <span class="arrow-right">➔</span>
+                <div class="ans-box"> </div>
+              </div>
+              <div class="grid-2-mini" style="margin-top: 5px;">
+                <div>
+                  <div class="header-title" style="font-size: 9px;">DEFINICIÓN</div>
+                  <textarea class="input-red" rows="3" placeholder="Definición..."></textarea>
+                  <div class="header-title" style="font-size: 9px; margin-top: 4px;">Referente Bibliográfico (APA)</div>
+                  <textarea class="input-red" rows="3" placeholder="APA..."></textarea>
+                </div>
+                <div class="pronostico-col">
+<div class="header-title" style="font-size: 9px;">Análisis de respuesta Ítem 1</div>
+                  <textarea class="input-red" rows="3" placeholder="Análisis..."></textarea>
+                  <div class="header-title" style="font-size: 9px;">
+                    <div class="arrow-down">➔</div>
+                  Pronóstico</div>
+                  <textarea class="input-red" rows="6" placeholder="Pronóstico..."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Indicador b -->
+            <div class="card-analysis">
+              <div class="ind-head-row">
+                <textarea class="input-black-replica ind-pro-b-target" rows="2" placeholder="Se replica indicador &quot;b&quot;..."></textarea>
+                <span class="arrow-right">➔</span>
+                <div class="ans-box"> </div>
+              </div>
+              <div class="grid-2-mini" style="margin-top: 5px;">
+                <div>
+                  <div class="header-title" style="font-size: 9px;">DEFINICIÓN</div>
+                  <textarea class="input-red" rows="3" placeholder="Definición..."></textarea>
+                  <div class="header-title" style="font-size: 9px; margin-top: 4px;">Referente Bibliográfico (APA)</div>
+                  <textarea class="input-red" rows="3" placeholder="APA..."></textarea>
+                </div>
+                <div class="pronostico-col">
+<div class="header-title" style="font-size: 9px;">Análisis de respuesta Ítem 2</div>
+                  <textarea class="input-red" rows="3" placeholder="Análisis..."></textarea>
+                  <div class="header-title" style="font-size: 9px;">
+                    <div class="arrow-down">➔</div>
+                  Pronóstico</div>
+                  <textarea class="input-red" rows="6" placeholder="Pronóstico..."></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PAR C - D -->
+          <div class="pair-row">
+            <!-- Indicador c -->
+            <div class="card-analysis">
+              <div class="ind-head-row">
+                <textarea class="input-black-replica ind-pro-c-target" rows="2" placeholder="Se replica indicador &quot;c&quot;..."></textarea>
+                <span class="arrow-right">➔</span>
+                <div class="ans-box"> </div>
+              </div>
+              <div class="grid-2-mini" style="margin-top: 5px;">
+                <div>
+                  <div class="header-title" style="font-size: 9px;">DEFINICIÓN</div>
+                  <textarea class="input-red" rows="3" placeholder="Definición..."></textarea>
+                  <div class="header-title" style="font-size: 9px; margin-top: 4px;">Referente Bibliográfico (APA)</div>
+                  <textarea class="input-red" rows="3" placeholder="APA..."></textarea>
+                </div>
+                <div class="pronostico-col">
+<div class="header-title" style="font-size: 9px;">Análisis de respuesta Ítem 3</div>
+                  <textarea class="input-red" rows="3" placeholder="Análisis..."></textarea>
+                  <div class="header-title" style="font-size: 9px;">
+                    <div class="arrow-down">➔</div>
+                  Pronóstico</div>
+                  <textarea class="input-red" rows="6" placeholder="Pronóstico..."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Indicador d -->
+            <div class="card-analysis">
+              <div class="ind-head-row">
+                <textarea class="input-black-replica ind-pro-d-target" rows="2" placeholder="Se replica indicador &quot;d&quot;..."></textarea>
+                <span class="arrow-right">➔</span>
+                <div class="ans-box"> </div>
+              </div>
+              <div class="grid-2-mini" style="margin-top: 5px;">
+                <div>
+                  <div class="header-title" style="font-size: 9px;">DEFINICIÓN</div>
+                  <textarea class="input-red" rows="3" placeholder="Definición..."></textarea>
+                  <div class="header-title" style="font-size: 9px; margin-top: 4px;">Referente Bibliográfico (APA)</div>
+                  <textarea class="input-red" rows="3" placeholder="APA..."></textarea>
+                </div>
+                <div class="pronostico-col">
+<div class="header-title" style="font-size: 9px;">Análisis de respuesta Ítem 4</div>
+                  <textarea class="input-red" rows="3" placeholder="Análisis..."></textarea>
+                  <div class="header-title" style="font-size: 9px;">
+                    <div class="arrow-down">➔</div>
+                  Pronóstico</div>
+                  <textarea class="input-red" rows="6" placeholder="Pronóstico..."></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PAR E - F -->
+          <div class="pair-row">
+            <!-- Indicador e -->
+            <div class="card-analysis">
+              <div class="ind-head-row">
+                <textarea class="input-black-replica ind-pro-e-target" rows="2" placeholder="Se replica indicador &quot;e&quot;..."></textarea>
+                <span class="arrow-right">➔</span>
+                <div class="ans-box"> </div>
+              </div>
+              <div class="grid-2-mini" style="margin-top: 5px;">
+                <div>
+                  <div class="header-title" style="font-size: 9px;">DEFINICIÓN</div>
+                  <textarea class="input-red" rows="3" placeholder="Definición..."></textarea>
+                  <div class="header-title" style="font-size: 9px; margin-top: 4px;">Referente Bibliográfico (APA)</div>
+                  <textarea class="input-red" rows="3" placeholder="APA..."></textarea>
+                </div>
+                <div class="pronostico-col">
+<div class="header-title" style="font-size: 9px;">Análisis de respuesta Ítem 5</div>
+                  <textarea class="input-red" rows="3" placeholder="Análisis..."></textarea>
+                  <div class="header-title" style="font-size: 9px;">
+                    <div class="arrow-down">➔</div>
+                  Pronóstico</div>
+                  <textarea class="input-red" rows="6" placeholder="Pronóstico..."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Indicador f -->
+            <div class="card-analysis">
+              <div class="ind-head-row">
+                <textarea class="input-black-replica ind-pro-f-target" rows="2" placeholder="Se replica indicador &quot;f&quot;..."></textarea>
+                <span class="arrow-right">➔</span>
+                <div class="ans-box"> </div>
+              </div>
+              <div class="grid-2-mini" style="margin-top: 5px;">
+                <div>
+                  <div class="header-title" style="font-size: 9px;">DEFINICIÓN</div>
+                  <textarea class="input-red" rows="3" placeholder="Definición..."></textarea>
+                  <div class="header-title" style="font-size: 9px; margin-top: 4px;">Referente Bibliográfico (APA)</div>
+                  <textarea class="input-red" rows="3" placeholder="APA..."></textarea>
+                </div>
+                <div class="pronostico-col">
+<div class="header-title" style="font-size: 9px;">Análisis de respuesta Ítem 6</div>
+                  <textarea class="input-red" rows="3" placeholder="Análisis..."></textarea>
+                  <div class="header-title" style="font-size: 9px;">
+                    <div class="arrow-down">➔</div>
+                  Pronóstico</div>
+                  <textarea class="input-red" rows="6" placeholder="Pronóstico..."></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+		
+		<!-- ================= BLOQUE 3: VARIABLE AUDIENCIA ================= -->
+      <div class="outer-frame" style="margin-top: 15px;">
+        <div class="grid-var-header">
+          <div>
+            <div class="header-title" style="font-size: 10px;">Variable Audiencia<br><span class="header-subtitle">(Comunida, Organización, Contexto. )</span></div>
+            <textarea class="input-black-replica var-audiencia-target" rows="2" placeholder="Se replica variable Audiencia"></textarea>
+          </div>
+          <div>
+            <textarea class="input-red" rows="2" placeholder="Sub título (atractivo para el lector)..."></textarea>
+            <div class="sub-caption" style="text-align: right;">Sub título</div>
+          </div>
+        </div>
+
+        <!-- GRID DE INDICADORES Y ANÁLISIS (a - f) -->
+        <div class="grid-aplicar-pairs" style="margin-top: 15px;">
+          
+          <!-- PAR A - B -->
+          <div class="pair-row">
+            <!-- Indicador a -->
+            <div class="card-analysis">
+              <div class="ind-head-row">
+                <textarea class="input-black-replica ind-aud-a-target" rows="2" placeholder="Se replica indicador &quot;a&quot;..."></textarea>
+                <span class="arrow-right">➔</span>
+                <div class="ans-box"> </div>
+              </div>
+              <div class="grid-2-mini" style="margin-top: 5px;">
+                <div>
+                  <div class="header-title" style="font-size: 9px;">DEFINICIÓN</div>
+                  <textarea class="input-red" rows="3" placeholder="Definición..."></textarea>
+                  <div class="header-title" style="font-size: 9px; margin-top: 4px;">Referente Bibliográfico (APA)</div>
+                  <textarea class="input-red" rows="3" placeholder="APA..."></textarea>
+                </div>
+                <div class="pronostico-col">
+<div class="header-title" style="font-size: 9px;">Análisis de respuesta Ítem 1</div>
+                  <textarea class="input-red" rows="3" placeholder="Análisis..."></textarea>
+                  <div class="header-title" style="font-size: 9px;">
+                    <div class="arrow-down">➔</div>
+                  Pronóstico</div>
+                  <textarea class="input-red" rows="6" placeholder="Pronóstico..."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Indicador b -->
+            <div class="card-analysis">
+              <div class="ind-head-row">
+                <textarea class="input-black-replica ind-aud-b-target" rows="2" placeholder="Se replica indicador &quot;b&quot;..."></textarea>
+                <span class="arrow-right">➔</span>
+                <div class="ans-box"> </div>
+              </div>
+              <div class="grid-2-mini" style="margin-top: 5px;">
+                <div>
+                  <div class="header-title" style="font-size: 9px;">DEFINICIÓN</div>
+                  <textarea class="input-red" rows="3" placeholder="Definición..."></textarea>
+                  <div class="header-title" style="font-size: 9px; margin-top: 4px;">Referente Bibliográfico (APA)</div>
+                  <textarea class="input-red" rows="3" placeholder="APA..."></textarea>
+                </div>
+                <div class="pronostico-col">
+<div class="header-title" style="font-size: 9px;">Análisis de respuesta Ítem 2</div>
+                  <textarea class="input-red" rows="3" placeholder="Análisis..."></textarea>
+                  <div class="header-title" style="font-size: 9px;">
+                    <div class="arrow-down">➔</div>
+                  Pronóstico</div>
+                  <textarea class="input-red" rows="6" placeholder="Pronóstico..."></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PAR C - D -->
+          <div class="pair-row">
+            <!-- Indicador c -->
+            <div class="card-analysis">
+              <div class="ind-head-row">
+                <textarea class="input-black-replica ind-aud-c-target" rows="2" placeholder="Se replica indicador &quot;c&quot;..."></textarea>
+                <span class="arrow-right">➔</span>
+                <div class="ans-box"> </div>
+              </div>
+              <div class="grid-2-mini" style="margin-top: 5px;">
+                <div>
+                  <div class="header-title" style="font-size: 9px;">DEFINICIÓN</div>
+                  <textarea class="input-red" rows="3" placeholder="Definición..."></textarea>
+                  <div class="header-title" style="font-size: 9px; margin-top: 4px;">Referente Bibliográfico (APA)</div>
+                  <textarea class="input-red" rows="3" placeholder="APA..."></textarea>
+                </div>
+                <div class="pronostico-col">
+<div class="header-title" style="font-size: 9px;">Análisis de respuesta Ítem 3</div>
+                  <textarea class="input-red" rows="3" placeholder="Análisis..."></textarea>
+                  <div class="header-title" style="font-size: 9px;">
+                    <div class="arrow-down">➔</div>
+                  Pronóstico</div>
+                  <textarea class="input-red" rows="6" placeholder="Pronóstico..."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Indicador d -->
+            <div class="card-analysis">
+              <div class="ind-head-row">
+                <textarea class="input-black-replica ind-aud-d-target" rows="2" placeholder="Se replica indicador &quot;d&quot;..."></textarea>
+                <span class="arrow-right">➔</span>
+                <div class="ans-box"> </div>
+              </div>
+              <div class="grid-2-mini" style="margin-top: 5px;">
+                <div>
+                  <div class="header-title" style="font-size: 9px;">DEFINICIÓN</div>
+                  <textarea class="input-red" rows="3" placeholder="Definición..."></textarea>
+                  <div class="header-title" style="font-size: 9px; margin-top: 4px;">Referente Bibliográfico (APA)</div>
+                  <textarea class="input-red" rows="3" placeholder="APA..."></textarea>
+                </div>
+                <div class="pronostico-col">
+<div class="header-title" style="font-size: 9px;">Análisis de respuesta Ítem 4</div>
+                  <textarea class="input-red" rows="3" placeholder="Análisis..."></textarea>
+                  <div class="header-title" style="font-size: 9px;">
+                    <div class="arrow-down">➔</div>
+                  Pronóstico</div>
+                  <textarea class="input-red" rows="6" placeholder="Pronóstico..."></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PAR E - F -->
+          <div class="pair-row">
+            <!-- Indicador e -->
+            <div class="card-analysis">
+              <div class="ind-head-row">
+                <textarea class="input-black-replica ind-aud-e-target" rows="2" placeholder="Se replica indicador &quot;e&quot;..."></textarea>
+                <span class="arrow-right">➔</span>
+                <div class="ans-box"> </div>
+              </div>
+              <div class="grid-2-mini" style="margin-top: 5px;">
+                <div>
+                  <div class="header-title" style="font-size: 9px;">DEFINICIÓN</div>
+                  <textarea class="input-red" rows="3" placeholder="Definición..."></textarea>
+                  <div class="header-title" style="font-size: 9px; margin-top: 4px;">Referente Bibliográfico (APA)</div>
+                  <textarea class="input-red" rows="3" placeholder="APA..."></textarea>
+                </div>
+                <div class="pronostico-col">
+<div class="header-title" style="font-size: 9px;">Análisis de respuesta Ítem 5</div>
+                  <textarea class="input-red" rows="3" placeholder="Análisis..."></textarea>
+                  <div class="header-title" style="font-size: 9px;">
+                    <div class="arrow-down">➔</div>
+                  Pronóstico</div>
+                  <textarea class="input-red" rows="6" placeholder="Pronóstico..."></textarea>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Indicador f -->
+            <div class="card-analysis">
+              <div class="ind-head-row">
+                <textarea class="input-black-replica ind-aud-f-target" rows="2" placeholder="Se replica indicador &quot;f&quot;..."></textarea>
+                <span class="arrow-right">➔</span>
+                <div class="ans-box"> </div>
+              </div>
+              <div class="grid-2-mini" style="margin-top: 5px;">
+                <div>
+                  <div class="header-title" style="font-size: 9px;">DEFINICIÓN</div>
+                  <textarea class="input-red" rows="3" placeholder="Definición..."></textarea>
+                  <div class="header-title" style="font-size: 9px; margin-top: 4px;">Referente Bibliográfico (APA)</div>
+                  <textarea class="input-red" rows="3" placeholder="APA..."></textarea>
+                </div>
+                <div class="pronostico-col">
+<div class="header-title" style="font-size: 9px;">Análisis de respuesta Ítem 6</div>
+                  <textarea class="input-red" rows="3" placeholder="Análisis..."></textarea>
+                  <div class="header-title" style="font-size: 9px;">
+                    <div class="arrow-down">➔</div>
+                  Pronóstico</div>
+                  <textarea class="input-red" rows="6" placeholder="Pronóstico..."></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+
+      <!-- CONCLUSIÓN FINAL METODOLÓGICA -->
+      <p class="section-desc" style="margin-top: 20px; font-style: italic;">
+        El análisis de resultados confirma que la aplicación del Método ORA guía eficazmente la construcción de un producto de investigación de valor. A través de este método, se consolida un proceso de aprendizaje basado en la experiencia, donde la observación, la reflexión y la aplicación del conocimiento se articulan para interpretar hallazgos y formular conclusiones pertinentes. Este ejercicio culmina en un producto final que establece un vínculo directo con problemáticas reales. La calidad y el impacto de este resultado se han validado con indicadores de éxito, lo que demuestra que el Método ORA es una herramienta clave para fomentar la autonomía y el pensamiento crítico, competencias fundamentales para la creación exitosa de un producto de investigación.
+      </p>
+
+	<!-- ================= PARTE 8: CONCLUSIONES ================= -->
+    <div id="seccion_conclusiones" class="section-banner" style="margin-top: 35px;">CONCLUSIONES</div>
+    <div class="outer-frame">
+      
+      <!-- ENCABEZADO DE 3 COLUMNAS -->
+      <div class="grid-conclusiones-header">
+        <div class="header-title" style="font-size: 11px; text-transform: uppercase;">PRONÓSTICOS</div>
+        <div class="header-title" style="font-size: 10px;">
+          Situaciones que pueden generar consecuencias a pronósticos de éxito identificados.
+        </div>
+        <div class="header-title" style="font-size: 10px;">
+          Acciones a los cuales el investigador puede anticiparse para controlar una causa
+        </div>
+      </div>
+
+      <!-- FILAS DE TRABAJO (MATRIZ CONCLUSIONES) -->
+      <div class="conclusiones-rows-container" style="margin-top: 10px;">
+		  
+		 <!-- CONCLUSIONES A (OBJETO DE ESTUDIO) -->
+        <!-- EJEMPLO FILA 1: INDICADOR A (OBJETO DE ESTUDIO) -->
+        <div class="conconclusion-row">
+          <textarea class="input-black-replica" rows="3" placeholder="Se replica Pronóstico del indicador &quot;a&quot; de la variable Objeto de Estudio"></textarea>
+          <span class="row-arrow">➔</span>
+          <textarea class="input-red" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
+          <span class="row-arrow">➔</span>
+          <textarea class="input-red" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
+        </div>
+
+        <!-- EJEMPLO FILA 2: INDICADOR B (OBJETO DE ESTUDIO) -->
+        <div class="conconclusion-row">
+          <textarea class="input-black-replica" rows="3" placeholder="Se replica Pronóstico del indicador &quot;b&quot; de la variable Objeto de Estudio"></textarea>
+          <span class="row-arrow">➔</span>
+          <textarea class="input-red" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
+          <span class="row-arrow">➔</span>
+          <textarea class="input-red" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
+        </div>
+
+        <!-- EJEMPLO FILA 3: INDICADOR C (OBJETO DE ESTUDIO) -->
+        <div class="conconclusion-row">
+          <textarea class="input-black-replica" rows="3" placeholder="Se replica Pronóstico del indicador &quot;c&quot; de la variable Objeto de Estudio"></textarea>
+          <span class="row-arrow">➔</span>
+          <textarea class="input-red" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
+          <span class="row-arrow">➔</span>
+          <textarea class="input-red" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
+        </div>
+
+        <!-- EJEMPLO FILA 4: INDICADOR D (OBJETO DE ESTUDIO) -->
+        <div class="conconclusion-row">
+          <textarea class="input-black-replica" rows="3" placeholder="Se replica Pronóstico del indicador &quot;d&quot; de la variable Objeto de Estudio"></textarea>
+          <span class="row-arrow">➔</span>
+          <textarea class="input-red" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
+          <span class="row-arrow">➔</span>
+          <textarea class="input-red" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
+        </div>
+
+        <!-- EJEMPLO FILA 5: INDICADOR E (OBJETO DE ESTUDIO) -->
+        <div class="conconclusion-row">
+          <textarea class="input-black-replica" rows="3" placeholder="Se replica Pronóstico del indicador &quot;e&quot; de la variable Objeto de Estudio"></textarea>
+          <span class="row-arrow">➔</span>
+          <textarea class="input-red" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
+          <span class="row-arrow">➔</span>
+          <textarea class="input-red" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
+        </div>
+
+        <!-- EJEMPLO FILA 6: INDICADOR F (OBJETO DE ESTUDIO) -->
+        <div class="conconclusion-row">
+          <textarea class="input-black-replica" rows="3" placeholder="Se replica Pronóstico del indicador &quot;f&quot; de la variable Objeto de Estudio"></textarea>
+          <span class="row-arrow">➔</span>
+          <textarea class="input-red" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
+          <span class="row-arrow">➔</span>
+          <textarea class="input-red" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
+        </div>
+
+        <!-- FILA 7: INICIO VARIABLE PROPÓSITO DISCIPLINAR -->
+        <div class="conconclusion-row" style="margin-top: 15px;">
+          <textarea class="input-black-replica" rows="3" placeholder="Se replica Pronóstico del indicador &quot;a&quot; de la variable Propósito disciplinar"></textarea>
+          <span class="row-arrow">➔</span>
+          <textarea class="input-red" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
+          <span class="row-arrow">➔</span>
+          <textarea class="input-red" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
+        </div>
+
+      </div>
+		
+		<div class="conclusiones-rows-container" style="margin-top: 10px;">
+		  
+		 <!-- CONCLUSIONES A (OBJETO DE ESTUDIO) -->
+        <!-- EJEMPLO FILA 1: INDICADOR A (OBJETO DE ESTUDIO) -->
+        <div class="conconclusion-row">
+          <textarea class="input-black-replica" rows="3" placeholder="Se replica Pronóstico del indicador &quot;b&quot; de la variable Propósito disciplinar"></textarea>
+          <span class="row-arrow">➔</span>
+          <textarea class="input-red" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
+          <span class="row-arrow">➔</span>
+          <textarea class="input-red" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
+        </div>
+
+        <!-- EJEMPLO FILA 2: INDICADOR B (OBJETO DE ESTUDIO) -->
+        <div class="conconclusion-row">
+          <textarea class="input-black-replica" rows="3" placeholder="Se replica Pronóstico del indicador &quot;c&quot; de la variable Propósito disciplinar"></textarea>
+          <span class="row-arrow">➔</span>
+          <textarea class="input-red" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
+          <span class="row-arrow">➔</span>
+          <textarea class="input-red" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
+        </div>
+
+        <!-- EJEMPLO FILA 3: INDICADOR C (OBJETO DE ESTUDIO) -->
+        <div class="conconclusion-row">
+          <textarea class="input-black-replica" rows="3" placeholder="Se replica Pronóstico del indicador &quot;d&quot; de la variable Propósito disciplinar"></textarea>
+          <span class="row-arrow">➔</span>
+          <textarea class="input-red" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
+          <span class="row-arrow">➔</span>
+          <textarea class="input-red" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
+        </div>
+
+        <!-- EJEMPLO FILA 4: INDICADOR D (OBJETO DE ESTUDIO) -->
+        <div class="conconclusion-row">
+          <textarea class="input-black-replica" rows="3" placeholder="Se replica Pronóstico del indicador &quot;e&quot; de la variable Propósito disciplinar"></textarea>
+          <span class="row-arrow">➔</span>
+          <textarea class="input-red" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
+          <span class="row-arrow">➔</span>
+          <textarea class="input-red" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
+        </div>
+
+        <!-- EJEMPLO FILA 5: INDICADOR E (OBJETO DE ESTUDIO) -->
+        <div class="conconclusion-row">
+          <textarea class="input-black-replica" rows="3" placeholder="Se replica Pronóstico del indicador &quot;f&quot; de la variable Propósito disciplinar"></textarea>
+          <span class="row-arrow">➔</span>
+          <textarea class="input-red" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
+          <span class="row-arrow">➔</span>
+          <textarea class="input-red" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
+        </div>
+
+        <!-- EJEMPLO FILA 6: INDICADOR F (OBJETO DE ESTUDIO) -->
+        <!-- FILA 7: INICIO VARIABLE PROPÓSITO DISCIPLINAR -->
+        <div class="conconclusion-row" style="margin-top: 15px;">
+          <textarea class="input-black-replica" rows="3" placeholder="Se replica Pronóstico del indicador &quot;a&quot; de la variable Audiencia"></textarea>
+          <span class="row-arrow">➔</span>
+          <textarea class="input-red" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
+          <span class="row-arrow">➔</span>
+          <textarea class="input-red" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
+        </div>
+
+      </div>
+		
+	<div class="conclusiones-rows-container" style="margin-top: 10px;">
+		  
+		 <!-- CONCLUSIONES A (OBJETO DE ESTUDIO) -->
+        <!-- EJEMPLO FILA 1: INDICADOR A (OBJETO DE ESTUDIO) -->
+        <div class="conconclusion-row">
+          <textarea class="input-black-replica" rows="3" placeholder="Se replica Pronóstico del indicador &quot;b&quot; de la variable Audiencia"></textarea>
+          <span class="row-arrow">➔</span>
+          <textarea class="input-red" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
+          <span class="row-arrow">➔</span>
+          <textarea class="input-red" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
+        </div>
+
+        <!-- EJEMPLO FILA 2: INDICADOR B (OBJETO DE ESTUDIO) -->
+        <div class="conconclusion-row">
+          <textarea class="input-black-replica" rows="3" placeholder="Se replica Pronóstico del indicador &quot;c&quot; de la variable Audiencia"></textarea>
+          <span class="row-arrow">➔</span>
+          <textarea class="input-red" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
+          <span class="row-arrow">➔</span>
+          <textarea class="input-red" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
+        </div>
+
+        <!-- EJEMPLO FILA 3: INDICADOR C (OBJETO DE ESTUDIO) -->
+        <div class="conconclusion-row">
+          <textarea class="input-black-replica" rows="3" placeholder="Se replica Pronóstico del indicador &quot;d&quot; de la variable Audiencia"></textarea>
+          <span class="row-arrow">➔</span>
+          <textarea class="input-red" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
+          <span class="row-arrow">➔</span>
+          <textarea class="input-red" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
+        </div>
+
+        <!-- EJEMPLO FILA 4: INDICADOR D (OBJETO DE ESTUDIO) -->
+        <div class="conconclusion-row">
+          <textarea class="input-black-replica" rows="3" placeholder="Se replica Pronóstico del indicador &quot;e&quot; de la variable Audiencia"></textarea>
+          <span class="row-arrow">➔</span>
+          <textarea class="input-red" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
+          <span class="row-arrow">➔</span>
+          <textarea class="input-red" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
+        </div>
+
+        <!-- EJEMPLO FILA 5: INDICADOR E (OBJETO DE ESTUDIO) -->
+        <div class="conconclusion-row">
+          <textarea class="input-black-replica" rows="3" placeholder="Se replica Pronóstico del indicador &quot;f&quot; de la variable Audiencia"></textarea>
+          <span class="row-arrow">➔</span>
+          <textarea class="input-red" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
+          <span class="row-arrow">➔</span>
+          <textarea class="input-red" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
+        </div>
+
+        <!-- EJEMPLO FILA 6: INDICADOR F (OBJETO DE ESTUDIO) -->
+        <div class="conconclusion-row"> </div>
+
+        <!-- FILA 7: INICIO VARIABLE PROPÓSITO DISCIPLINAR -->
+        <div class="conconclusion-row" style="margin-top: 15px;"> </div>
+      </div>
+	  </div>
+<!-- ================= PARTE 9: LISTA DE REFERENTES ================= -->
+    <div id="seccion_referentes" class="section-banner" style="margin-top: 35px;">LISTA DE REFERENTES</div>
+
+    <div class="outer-frame">
+      <!-- PÁRRAFO INTRODUCTORIO DE RIGOR ACADÉMICO -->
+      <p class="section-desc" style="text-align: justify; line-height: 1.6;">
+        El listado de referencias es fundamental para garantizar la <strong>rigurosidad académica y la validez de la investigación</strong>. Por ello, desde la etapa de observación, se recopila información relevante de diversas fuentes, como bases de datos, documentos científicos y bibliografía especializada. Como señala Pérez (2009), estas son el conjunto de fuentes consultadas por el investigador (libros, textos, revistas, medios audiovisuales y electrónicos) que <strong>sustentan el planteamiento del problema y la formulación de objetivos</strong>. Durante la fase de reflexión, estas mismas fuentes permiten <strong>contrastar enfoques teóricos, metodologías y hallazgos previos</strong>, lo que enriquece significativamente el análisis crítico del proyecto.<br><br>
+        Para organizar esta vasta información de manera estandarizada, se emplean las normas APA. Estas facilitan la <strong>citación adecuada</strong> y la construcción de un marco referencial sólido y coherente. La correcta estructuración del listado de referencias no solo respalda la <strong>credibilidad del estudio</strong>, sino que también promueve el desarrollo de <strong>competencias investigativas</strong> en los estudiantes. Esto asegura la coherencia y trazabilidad de sus argumentos dentro del proceso de enseñanza-aprendizaje, consolidando una base académica robusta para futuras indagaciones.
+      </p>
+
+		<!-- CONTENEDOR DINÁMICO DE CASILLAS REPLICADAS -->
+<div id="contenedor-lista-referencias" class="referencias-list-container" style="margin-top: 15px;">
+  <!-- Aquí JavaScript generará automáticamente las casillas negras a medida que el usuario escriba citas -->
+  <p class="placeholder-referencias" style="color: #64748b; font-style: italic;">
+    Las citas APA ingresadas en el proyecto se compilarán automáticamente aquí...
+  </p>
+</div>
+		
+      
+
+    </div>
+    </div>
+    <!-- ================= PARTE 9: LISTA DE REFERENTES DEL MÉTODO ================= -->
+    <div class="section-banner" style="margin-top: 35px;">LISTA DE REFERENTES DEL MÉTODO</div>
+
+    <div class="outer-frame">
+      <!-- PÁRRAFO INTRODUCTORIO -->
+      <!-- CONTENEDOR DE REFERENCIAS EN TEXTO LIBRE CON SANGRÍA FRANCESA -->
+      <div class="referencias-apa-container" style="margin-top: 5px; margin-left: 5%; margin-right: 5%">
+        <p class="ref-apa">Balastrini, M. y Lares, A. (1995). <em>El informe técnico y administrativo</em>. Caracas: Panapo.</p>
+        
+        <p class="ref-apa">Castelló Martínez, A. (2011). La definición del público objetivo en el briefing de medios para la estrategia de comunicación online. <em>Actas / III Congreso Internacional Latina de Comunicación Social</em>. La Laguna: Sociedad Latina de Comunicación Social. ISBN 978-84-939337-5-3. Recuperado de http://rua.ua.es/dspace/handle/10045/19886</p>
+        
+        <p class="ref-apa">Cauas, D. (s.f.). <em>Definición de las variables, enfoques y tipo de investigación</em>. Recuperado de https://studylib.es/doc/5611819/variables--enfoque-y-tipo-de-investigaci%C3%B3n</p>
+        
+        <p class="ref-apa">Cedeño Macías, N. M., Demera Vélez, C. A., Espinoza Cedeño, M. E., Franco López, M. C., García Mendoza, M. J., Mendoza Bailón, P. J., & Navarro, M. F. (2016). <em>METODOLOGÍA DE LA INVESTIGACIÓN</em>. Quito: Universidad Técnica de Manabí.</p>
+        
+        <p class="ref-apa">García Uceda, M. (2001). <em>Las claves de la publicidad</em>. Madrid: ESIC.</p>
+        
+        <p class="ref-apa">Gutiérrez S., R. (2006). <em>Introducción al Método científico</em> (18ª ed.). México: Editorial Esfinge.</p>
+        
+        <p class="ref-apa">Hewitt, N. (2007). El proyecto integrador: una estrategia pedagógica para lograr la integración y la socialización del conocimiento. <em>Psychologia. Avances de la disciplina</em>, 1(1), 235-240. Recuperado de https://bit.ly/3zJcgK6</p>
+        
+        <p class="ref-apa">Hurtado, J. (2012). <em>El proyecto de investigación: Comprensión holística de la metodología y la investigación</em>. Caracas: Ediciones Quirón.</p>
+        
+        <p class="ref-apa">Jones, C. (1978). <em>Métodos de Diseño</em>. Barcelona: Editorial Gustavo Gili S.A.</p>
+        
+        <p class="ref-apa">Martínez. (2001). <em>Metodología de la Investigación</em>. Universidad de los Andes, Facultad de Ciencias Jurídicas, Políticas y Criminologías. Recuperado de http://www.monografias.com/trabajos-pdf/historia-pensamientocientifico/historia-pensamiento-cientifico.html</p>
+        
+        <p class="ref-apa">Méndez Álvarez, C. E. (1990). <em>Metodología: guía para elaborar diseños de investigación en ciencias económicas, contables, administrativas</em>. Bogotá: McGraw-Hill.</p>
+        
+        <p class="ref-apa">Narváez, N. A. y Gélvez, L. E. (2020). Propuesta metodológica para el desarrollo del pensamiento creativo desde el diseño de la ingeniería concurrente. <em>Sophia</em>, 16(2), 207-218.</p>
+        
+        <p class="ref-apa">Narváez, N., Cardozo, L., Zuluaga, C. y Castellanos, O. (2019). Los proyectos integradores: una estructura productiva del conocimiento en el programa académico de Diseño Gráfico. <em>IGNIS</em>, (13), 77-86.</p>
+        
+        <p class="ref-apa">Penagos, G. (2015). Desde los proyectos de aula hacia la investigación formativa: un reto de la docencia en la educación superior. <em>Rastros Rostros</em>, 17(31), 111-116. doi: http://dx.doi.org/10.16925/ra.v%25vi%25i.745</p>
+        
+        <p class="ref-apa">Pérez, J. A. (2007). Las variables en el método científico. <em>Revista de la Sociedad Química del Perú</em>, 73(3), 171-177.</p>
+        
+        <p class="ref-apa">Pérez, A. (2009). <em>Guía Metodológica para anteproyectos de investigación</em>. Caracas: Fondo Editorial de la Universidad Pedagógica Experimental Libertador.</p>
+        
+        <p class="ref-apa">Ramírez, T. (1999). <em>Cómo hacer un proyecto de investigación</em>. Venezuela: Panapo.</p>
+        
+        <p class="ref-apa">Ramírez, T. (2010). <em>Cómo hacer un proyecto de investigación</em>. Caracas: Editorial Panapo.</p>
+        
+        <p class="ref-apa">Robles, M., Pelekais, C., Gutiérrez, D., Lareal, A., Vera, C. & Urdaneta, G. (2014). <em>Manual para la elaboración del trabajo Especial de grado, trabajo de grado y Tesis Doctoral (estudios de posgrado)</em>. Maracaibo: Universidad Privada Dr. Rafael Belloso Chacín URBE. ISBN: 978-980-414-011-2.</p>
+        
+        <p class="ref-apa">Ruiz, L. R. (2006). <em>Historia y Evolución del Pensamiento Científico</em>.</p>
+        
+        <p class="ref-apa">Sabino, C. (1999). <em>Cómo hacer una tesis: y elaborar todo tipo de escritos</em>. Buenos Aires: Lumen/Hvmanitas.</p>
+        
+        <p class="ref-apa">Tamayo y Tamayo, M. (1998). <em>Aprender a investigar</em>. Bogotá: ICFES.</p>
+      </div>
+
+</div>
+
+<footer class="site-footer">
+  <div>Diseñado por Nikolai Alexander Narváez Caballero, PhD</div>
+  <div>Corporación Unificada Nacional de Educación Superior</div>
+</footer>
+
+<div id="modalEvidencias" class="share-modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalEvidencias-title">
+  <div class="share-modal-card evidence-modal-card" style="max-width: 600px;">
+    <div class="share-modal-header">
+      <h3 id="modalEvidencias-title"><i class="fa-solid fa-folder-bookmark"></i> Carpeta de Evidencias</h3>
+      <button type="button" class="share-close-btn" id="btnCloseEvidencias" aria-label="Cerrar">×</button>
+    </div>
+    <p class="evidence-modal-description">
+      Espacio para que los participantes expongan y compartan artículos, referencias y documentos consultados.
+    </p>
+    <a id="evidence-drive-link" class="evidence-drive-link" target="_blank" rel="noopener noreferrer" hidden>
+      <i class="fa-brands fa-google-drive"></i> Abrir carpeta compartida de Google Drive
+    </a>
+
+    <div class="evidence-form">
+      <input type="text" id="evidenciaTitulo" class="share-input" placeholder="Título del artículo o documento..." maxlength="200">
+      <input type="url" id="evidenciaLink" class="share-input" placeholder="Enlace / URL de la evidencia (Google Drive, DOI, etc.)...">
+      <textarea id="evidenciaDescripcion" class="share-input" rows="2" placeholder="Breve descripción o aporte al proyecto..." maxlength="2000"></textarea>
+      <button type="button" id="btnGuardarEvidencia" class="share-primary-btn">+ Agregar Evidencia</button>
+    </div>
+
+    <div class="share-collaborators-panel">
+      <h4>Documentos y artículos expuestos</h4>
+      <ul id="listaEvidencias" class="share-collaborators-list evidence-list" aria-live="polite">
+        <li><span>Cargando evidencias...</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+		</body>
+<!-- Carga del archivo de configuración de programas y asignaturas -->
+  <script src="asignaturas_npi.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://apis.google.com/js/api.js" async defer></script>
+  <!-- Tu script de funciones generales -->
+  <script src="script.js"></script>
+		
+
+</html>
