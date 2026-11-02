@@ -118,6 +118,62 @@ window.cerrarSesionGoogle = async function() {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
+  const NOMENCLATURA_SIORA = {
+  // Integrantes
+  "IDN_INT_1_Nombre": "Gerente - Nombres",
+  "IDN_INT_1_Apellido": "Gerente - Apellidos",
+  "IDN_INT_1_Programa": "Gerente - Programa",
+  "IDN_INT_1_Asignatura": "Gerente - Código Asignatura",
+  "IDN_INT_1_Correo": "Gerente - Correo Institucional",
+  "IDN_INT_1_Participacion": "Gerente - % Participación",
+  "IDN_INT_2_Nombre": "Integrante 2 - Nombres",
+  "IDN_INT_2_Apellido": "Integrante 2 - Apellidos",
+  "IDN_INT_2_Correo": "Integrante 2 - Correo",
+
+  // Variables y Título
+  "VAR_OBJ": "Variable Objeto de Estudio",
+  "VAR_PRO_NIP": "Variable Propósito Disciplinar (NPI)",
+  "VAR_AUD": "Variable Audiencia",
+  "IDN_PROY_Titulo": "Título del Proyecto",
+  "VAR_DEF_OBJ": "Definición Objeto de Estudio",
+  "VAR_DEF_PRO": "Definición Propósito Disciplinar",
+  "VAR_DEF_AUD": "Definición Audiencia",
+  "VAR_REF_OBJ": "Referencia APA - Objeto",
+  "VAR_REF_PRO": "Referencia APA - Propósito",
+  "VAR_REF_AUD": "Referencia APA - Audiencia",
+
+  // Pregunta, Supuesto y Objetivos
+  "PREG_COMPLEMENTO": "Pregunta Problema",
+  "SUP_EXITO_TEXTO": "Supuesto de Éxito",
+  "OBJ_GEN_VERBO": "Objetivo General - Verbo",
+  "OBJ_GEN_TEXTO": "Objetivo General - Redacción",
+
+  // Indicadores Objeto
+  "VAR_OBJ_IND_a": "Indicador Objeto (a)",
+  "VAR_OBJ_IND_b": "Indicador Objeto (b)",
+  "VAR_OBJ_IND_c": "Indicador Objeto (c)",
+  "VAR_OBJ_IND_d": "Indicador Objeto (d)",
+  "VAR_OBJ_IND_e": "Indicador Objeto (e)",
+  "VAR_OBJ_IND_f": "Indicador Objeto (f)",
+
+  // Indicadores Propósito
+  "VAR_PRO_IND_a": "Indicador Propósito (a)",
+  "VAR_PRO_IND_b": "Indicador Propósito (b)",
+  "VAR_PRO_IND_c": "Indicador Propósito (c)",
+
+  // Indicadores Audiencia
+  "VAR_AUD_IND_a": "Indicador Audiencia (a)",
+  "VAR_AUD_IND_b": "Indicador Audiencia (b)",
+
+  // Metodología y Muestreo
+  "MET_ENF_TIPO": "Enfoque de la Investigación",
+  "MUE_PARAM_POBLACION": "Muestreo - Población",
+  "MUE_PARAM_CONFIANZA": "Muestreo - Nivel de Confianza",
+  "MUE_PARAM_MARGEN": "Muestreo - Margen de Error",
+  "MUE_RES_TOTAL": "Muestreo - Muestra Resultante",
+  "MUE_TEC_REC": "Técnica de Recolección",
+  "MUE_LINK_INS": "Link del Instrumento"
+};
   const STORAGE_KEY = "siora_form_v1";
   const PROJECT_ID_STORAGE_KEY = "siora_active_project_v1";
   const UNPERSISTED_PROJECT_ID_KEY = "siora_unpersisted_project_v1";
@@ -973,25 +1029,75 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  async function guardarHistorialCambio(projectId, datosProyecto, changeDescription = 'Actualización general del proyecto') {
+  async function guardarHistorialCambio(
+  projectId, 
+  datosProyecto, 
+  changeDescription = 'Actualización general del proyecto', 
+  fieldId = 'general', 
+  addedText = ''
+) {
   const user = firebaseAuth?.currentUser || currentUser;
   if (!firebaseDb || !projectId) throw new Error('Firebase no está disponible para guardar el historial');
   if (!user?.email) throw new Error('Debes iniciar sesión para guardar el historial');
 
   const timestamp = Date.now();
   const fecha = new Date(timestamp).toISOString();
-  const historyEntry = {
+
+  // Normalización y fallbacks para datos del usuario
+  const userEmail = (user.email || '').trim().toLowerCase();
+  const userName = (user.displayName || userEmail || 'Usuario').trim();
+
+  // Comparar campos actuales contra el estado previo en memoria (lastRealtimeFields)
+  const nuevosCampos = datosProyecto?.fields || (typeof collectFormState === 'function' ? collectFormState() : {});
+  const camposAnteriores = typeof lastRealtimeFields !== 'undefined' ? lastRealtimeFields : {};
+  const cambiosDetectados = [];
+
+  if (nuevosCampos && typeof nuevosCampos === 'object') {
+    Object.entries(nuevosCampos).forEach(([clave, valorNuevo]) => {
+      const valorAnterior = camposAnteriores[clave];
+      // Evitar registrar campos auxiliares de autoría o sin cambios
+      if (clave.endsWith('_author') || clave === 'fileName') return;
+
+      if (JSON.stringify(valorAnterior) !== JSON.stringify(valorNuevo)) {
+        const etiqueta = (typeof NOMENCLATURA_SIORA !== 'undefined' && NOMENCLATURA_SIORA[clave]) || clave;
+        cambiosDetectados.push({
+          clave,
+          etiqueta,
+          valorAnterior: valorAnterior ?? "",
+          valorNuevo: valorNuevo ?? ""
+        });
+      }
+    });
+  }
+
+  // Fallback inteligente para addedText si no fue provisto
+  const textoAgregadoFinal = (addedText || '').trim() || 
+    (cambiosDetectados.length > 0 
+      ? cambiosDetectados.map(c => `${c.etiqueta}: ${c.valorNuevo}`).join(' | ') 
+      : 'Actualización realizada');
+
+  // Construcción del objeto de historial sanitizado
+  const historialEntry = {
     timestamp,
     fecha,
-    userEmail: normalizeEmail(user.email),
-    userName: String(user.displayName || user.email || 'Usuario'),
-    changeDescription: String(changeDescription || 'Modificación en campos o datos del proyecto'),
-    summary: {
-      projectTitle: String(datosProyecto?.projectName || datosProyecto?.config?.projectName || 'Proyecto'),
-      date: fecha
-    }
+    userEmail,
+    userName,
+    fieldId: (fieldId || 'general').trim(),
+    addedText: textoAgregadoFinal,
+    changeDescription: (changeDescription || 'Actualización general del proyecto').trim(),
+    cambios: cambiosDetectados // Conserva el desglose si existe
   };
-  await firebaseDb.ref(`projects/${projectId}/history`).push().update(historyEntry);
+
+  try {
+    // Guardar en Realtime Database
+    const historyRef = firebaseDb.ref(`projects/${projectId}/history`);
+    await historyRef.push(historialEntry);
+    console.log("Historial de cambio guardado exitosamente:", historialEntry);
+    return historialEntry;
+  } catch (error) {
+    console.error("Error al guardar el historial de cambio:", error);
+    throw error;
+  }
 }
 
   async function syncChangedTeamMemberEmail(event) {
@@ -2651,7 +2757,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .sort((first, second) => Number(second.timestamp || 0) - Number(first.timestamp || 0));
 
     if (!entries.length) {
-      list.innerHTML = '<li><span>No hay cambios guardados.</span></li>';
+      list.innerHTML = '<li><span>No hay cambios guardados en el historial.</span></li>';
       return;
     }
 
@@ -2660,25 +2766,68 @@ document.addEventListener("DOMContentLoaded", () => {
       const date = Number.isFinite(timestamp) && timestamp > 0
         ? new Date(timestamp).toLocaleString('es-CO')
         : String(entry.fecha || '');
-      const title = entry.summary?.projectTitle || 'Proyecto';
-      const userName = entry.userName || entry.userEmail || 'Usuario';
-      const userEmail = entry.userEmail || '';
-      const description = entry.changeDescription || entry.summary?.description || 'Actualización del proyecto';
+      
+      const addedText = escapeHtml(entry.addedText || '');
+      
+      // Obtenemos el identificador general del campo. Si está vacío, indicará PENDIENTE para su ajuste futuro.
+      let rawFieldId = (entry.fieldId || '').trim();
+      if (!rawFieldId || rawFieldId === 'general') {
+        // Intenta buscar si el cambio traía una clave específica registrada
+        rawFieldId = entry.cambios?.[0]?.clave || 'PENDIENTE_ASIGNAR_ID';
+      }
+      const fieldId = escapeHtml(rawFieldId);
+
+      const description = escapeHtml(entry.changeDescription || 'Actualización del proyecto');
+      const userName = escapeHtml(entry.userName || entry.userEmail || 'Usuario');
+      const userEmail = escapeHtml(entry.userEmail || '');
+      const cambios = entry.cambios || entry.cambiosCuadriculas || [];
+
+      const detalleCambiosHtml = cambios.length > 0
+        ? `<ul style="margin-top: 6px; padding-left: 15px; font-size: 0.85em; color: #334155;">
+            ${cambios.map(c => `
+              <li>
+                <span style="background: #e2e8f0; font-weight: bold; padding: 1px 4px; border-radius: 3px; color: #1e293b;">
+                  [${escapeHtml(c.clave || c.fieldId || 'PENDIENTE_ID')}]
+                </span> 
+                <strong>${escapeHtml(c.etiqueta || '')}:</strong> 
+                <span style="color: #64748b; text-decoration: line-through;">"${escapeHtml(String(c.valorAnterior || ''))}"</span> ➔ 
+                <span style="color: #16a34a; font-weight: 500;">"${escapeHtml(String(c.valorNuevo || ''))}"</span>
+              </li>
+            `).join('')}
+          </ul>`
+        : '';
 
       return `
-        <li class="history-entry" style="padding: 10px 0; border-bottom: 1px solid #e2e8f0;">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-            <div>
-              <strong>${escapeHtml(title)}</strong>
-              <div style="font-size: 0.9em; color: #2563eb; margin-top: 2px;">
-                <em>Cambio:</em> ${escapeHtml(description)}
+        <li class="history-entry" style="padding: 14px 0; border-bottom: 1px solid #cbd5e1;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
+            
+            <!-- Columna Izquierda -->
+            <div style="flex: 1; min-width: 0;">
+              ${addedText ? `<div style="font-weight: bold; color: #0f172a; margin-bottom: 4px; font-size: 0.95em;">${addedText}</div>` : ''}
+              
+              <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 4px;">
+                <span style="background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; font-size: 0.75em; font-weight: 600; padding: 2px 6px; border-radius: 4px; display: inline-flex; align-items: center; gap: 4px;">
+                  <i class="fa-solid fa-code"></i> ID Campo: ${fieldId}
+                </span>
+              </div>
+
+              <div style="font-size: 0.9em; color: #2563eb; display: flex; align-items: center; gap: 6px;">
+                <i class="fa-solid fa-pen-to-square"></i> <span>${description}</span>
               </div>
             </div>
-            <small style="color: #64748b;">${escapeHtml(date)}</small>
+
+            <!-- Columna Derecha -->
+            <div style="text-align: right; flex-shrink: 0;">
+              <small style="color: #64748b; font-size: 0.8em; display: block; margin-bottom: 4px;">${date}</small>
+              <div style="font-size: 0.85em; color: #475569; display: flex; align-items: center; justify-content: flex-end; gap: 4px;">
+                <i class="fa-solid fa-user" style="color: #2563eb;"></i> 
+                <span style="font-weight: 600; color: #2563eb;">${userName}</span> 
+                <span style="color: #64748b;">&lt;${userEmail}&gt;</span>
+              </div>
+            </div>
+
           </div>
-          <div style="margin-top: 4px; font-size: 0.85em; color: #475569;">
-            <span>${escapeHtml(userName)}</span> &lt;${escapeHtml(userEmail)}&gt;
-          </div>
+          ${detalleCambiosHtml}
         </li>
       `;
     }).join('');
@@ -3639,13 +3788,14 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   function obtenerClaveCampo(elemento) {
-    if (elemento.dataset.sioraStorageKey) return elemento.dataset.sioraStorageKey;
-    if (elemento.id) return elemento.id;
+  if (elemento.dataset.sioraId) return elemento.dataset.sioraId;
+  if (elemento.dataset.sioraStorageKey) return elemento.dataset.sioraStorageKey;
+  if (elemento.id) return elemento.id;
 
-    const clave = obtenerClaveRutaCampo(elemento);
-    elemento.dataset.sioraStorageKey = clave;
-    return clave;
-  }
+  const clave = obtenerClaveRutaCampo(elemento);
+  elemento.dataset.sioraStorageKey = clave;
+  return clave;
+}
 
   function obtenerClaveRutaCampo(elemento) {
     const partes = [];

@@ -235,6 +235,12 @@ select.input-red {
   cursor: pointer;
 }
 
+select.enfoque-general-select {
+  height: 42px;
+  text-align-last: center;
+  cursor: pointer;
+}
+
 .input-black-replica {
   width: 100%;
   background-color: #e2e8f0 !important;
@@ -1891,6 +1897,43 @@ html {
   font-size: 13px;
 }
 
+.history-card-item {
+       display: grid;
+       grid-template-columns: 1fr auto;
+       gap: 12px;
+       align-items: center;
+       background-color: #f8fafc;
+       border: 1px solid #dbeafe;
+       border-radius: 10px;
+       padding: 10px 14px;
+       margin-bottom: 8px;
+       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+     }
+     .history-field-badge {
+       display: inline-flex;
+       align-items: center;
+       gap: 4px;
+       background-color: #eff6ff;
+       color: #1d4ed8;
+       border: 1px solid #bfdbfe;
+       font-size: 10px;
+       font-weight: 700;
+       padding: 2px 6px;
+       border-radius: 4px;
+       margin-top: 4px;
+     }
+     .history-user-info {
+       text-align: right;
+       font-size: 0.85em;
+       color: #1e40af;
+       font-weight: 600;
+     }
+     .history-user-email {
+       font-size: 0.8em;
+       color: #475569;
+       font-weight: normal;
+     }
+
 .tool-icons {
   display: flex;
   align-items: center;
@@ -2593,6 +2636,31 @@ html {
   margin: 0;
   padding: 0;
   font-size: 0.85rem;
+}
+
+/* Ajusta o crea estas reglas para el contenedor del historial de cambios */
+.historial-modal, 
+.modal-historial-cambios,
+#historialModal .modal-content {
+    width: 90vw !important;
+    max-width: 800px !important;    /* Amplía el ancho máximo */
+    height: 80vh !important;
+    max-height: 700px !important;   /* Amplía la altura máxima */
+}
+
+/* Asegura que el contenedor interno de la lista tenga desplazamiento fluido */
+.historial-body, 
+.historial-lista {
+    max-height: calc(80vh - 120px) !important;
+    overflow-y: auto;
+}
+
+/* Contenedor interno con desplazamiento fluido */
+.historial-body, 
+.historial-lista,
+#listaHistorial {
+    max-height: calc(85vh - 140px) !important;
+    overflow-y: auto;
 }
 
 .file-toolbar .action-btn i,

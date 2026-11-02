@@ -158,9 +158,10 @@
 <!-- CONTENEDOR DEL DASHBOARD DE EQUIPO -->
 <div id="integrantes" class="team-dashboard-container">
 
+  <!-- FACILITADOR / DOCENTE -->
   <div class="facilitator-field">
     <label for="correo_facilitador">Facilitador / Docente</label>
-    <input type="email" id="correo_facilitador" class="form-control" placeholder="docente@cun.edu.co">
+    <input type="email" id="correo_facilitador" class="form-control" data-siora-id="IDN_Facilitador_Correo" placeholder="docente@cun.edu.co">
   </div>
 
   <!-- INTEGRANTE 1 (GERENTE DEL PROYECTO) -->
@@ -168,32 +169,31 @@
     <span class="gerente-badge">Gerente del proyecto</span>
     <div>
       <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Nombres Integrante 1:</div>
-      <input type="text" class="input-red" id="nombre_1" placeholder="Nombres...">
+      <input type="text" class="input-red" id="nombre_1" data-siora-id="IDN_INT_1_Nombre" placeholder="Nombres...">
     </div>
     <div>
       <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Apellidos Integrante 1:</div>
-      <input type="text" class="input-red" id="apellido_1" placeholder="Apellidos...">
+      <input type="text" class="input-red" id="apellido_1" data-siora-id="IDN_INT_1_Apellido" placeholder="Apellidos...">
     </div>
     <div>
       <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Programa académico</div>
-      <select class="select-dashboard-red" id="programa_1">
+      <select class="select-dashboard-red" id="programa_1" data-siora-id="IDN_INT_1_Programa">
         <option value="">Seleccionar programa...</option>
       </select>
     </div>
     <div>
       <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Código asignatura</div>
-      <select class="select-dashboard-red" id="codigo_1">
+      <select class="select-dashboard-red" id="codigo_1" data-siora-id="IDN_INT_1_Asignatura">
         <option value="">Seleccionar código...</option>
       </select>
     </div>
     <div>
       <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Correo institucional</div>
-      <input type="email" id="correo_integrante_1" class="form-control input-correo-integrante" placeholder="correo@cun.edu.co" data-integrante="1">
+      <input type="email" id="correo_integrante_1" class="form-control input-correo-integrante" data-siora-id="IDN_INT_1_Correo" placeholder="correo@cun.edu.co" data-integrante="1">
     </div>
     <div style="text-align: center;">
       <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">% Participación</div>
-      <!-- CAJA DE RÉPLICA/CÁLCULO AUTOMÁTICO (LINEA NEGRA) -->
-      <input type="text" class="input-black-replica" id="part_1" readonly placeholder="%" style="text-align: center; font-weight: bold;">
+      <input type="text" class="input-black-replica" id="part_1" data-siora-id="IDN_INT_1_Participacion" readonly placeholder="%" style="text-align: center; font-weight: bold;">
     </div>
   </div>
 
@@ -201,31 +201,31 @@
   <div class="team-row">
     <div>
       <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Nombres Integrante 2:</div>
-      <input type="text" class="input-red" id="nombre_2" placeholder="Nombres...">
+      <input type="text" class="input-red" id="nombre_2" data-siora-id="IDN_INT_2_Nombre" placeholder="Nombres...">
     </div>
     <div>
       <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Apellidos Integrante 2:</div>
-      <input type="text" class="input-red" id="apellido_2" placeholder="Apellidos...">
+      <input type="text" class="input-red" id="apellido_2" data-siora-id="IDN_INT_2_Apellido" placeholder="Apellidos...">
     </div>
     <div>
       <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Programa académico</div>
-      <select class="select-dashboard-red" id="programa_2">
+      <select class="select-dashboard-red" id="programa_2" data-siora-id="IDN_INT_2_Programa">
         <option value="">Seleccionar programa...</option>
       </select>
     </div>
     <div>
       <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Código asignatura</div>
-      <select class="select-dashboard-red" id="codigo_2">
+      <select class="select-dashboard-red" id="codigo_2" data-siora-id="IDN_INT_2_Asignatura">
         <option value="">Seleccionar código...</option>
       </select>
     </div>
     <div>
       <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Correo institucional</div>
-      <input type="email" id="correo_integrante_2" class="form-control input-correo-integrante" placeholder="correo@cun.edu.co" data-integrante="2">
+      <input type="email" id="correo_integrante_2" class="form-control input-correo-integrante" data-siora-id="IDN_INT_2_Correo" placeholder="correo@cun.edu.co" data-integrante="2">
     </div>
     <div style="text-align: center;">
       <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">% Participación</div>
-      <input type="text" class="input-black-replica" id="part_2" readonly placeholder="%" style="text-align: center; font-weight: bold;">
+      <input type="text" class="input-black-replica" id="part_2" data-siora-id="IDN_INT_2_Participacion" readonly placeholder="%" style="text-align: center; font-weight: bold;">
     </div>
   </div>
 
@@ -233,31 +233,31 @@
   <div class="team-row">
     <div>
       <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Nombres Integrante 3:</div>
-      <input type="text" class="input-red" id="nombre_3" placeholder="Nombres...">
+      <input type="text" class="input-red" id="nombre_3" data-siora-id="IDN_INT_3_Nombre" placeholder="Nombres...">
     </div>
     <div>
       <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Apellidos Integrante 3:</div>
-      <input type="text" class="input-red" id="apellido_3" placeholder="Apellidos...">
+      <input type="text" class="input-red" id="apellido_3" data-siora-id="IDN_INT_3_Apellido" placeholder="Apellidos...">
     </div>
     <div>
       <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Programa académico</div>
-      <select class="select-dashboard-red" id="programa_3">
+      <select class="select-dashboard-red" id="programa_3" data-siora-id="IDN_INT_3_Programa">
         <option value="">Seleccionar programa...</option>
       </select>
     </div>
     <div>
       <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Código asignatura</div>
-      <select class="select-dashboard-red" id="codigo_3">
+      <select class="select-dashboard-red" id="codigo_3" data-siora-id="IDN_INT_3_Asignatura">
         <option value="">Seleccionar código...</option>
       </select>
     </div>
     <div>
       <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Correo institucional</div>
-      <input type="email" id="correo_integrante_3" class="form-control input-correo-integrante" placeholder="correo@cun.edu.co" data-integrante="3">
+      <input type="email" id="correo_integrante_3" class="form-control input-correo-integrante" data-siora-id="IDN_INT_3_Correo" placeholder="correo@cun.edu.co" data-integrante="3">
     </div>
     <div style="text-align: center;">
       <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">% Participación</div>
-      <input type="text" class="input-black-replica" id="part_3" readonly placeholder="%" style="text-align: center; font-weight: bold;">
+      <input type="text" class="input-black-replica" id="part_3" data-siora-id="IDN_INT_3_Participacion" readonly placeholder="%" style="text-align: center; font-weight: bold;">
     </div>
   </div>
 
@@ -265,31 +265,31 @@
   <div class="team-row">
     <div>
       <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Nombres Integrante 4:</div>
-      <input type="text" class="input-red" id="nombre_4" placeholder="Nombres...">
+      <input type="text" class="input-red" id="nombre_4" data-siora-id="IDN_INT_4_Nombre" placeholder="Nombres...">
     </div>
     <div>
       <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Apellidos Integrante 4:</div>
-      <input type="text" class="input-red" id="apellido_4" placeholder="Apellidos...">
+      <input type="text" class="input-red" id="apellido_4" data-siora-id="IDN_INT_4_Apellido" placeholder="Apellidos...">
     </div>
     <div>
       <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Programa académico</div>
-      <select class="select-dashboard-red" id="programa_4">
+      <select class="select-dashboard-red" id="programa_4" data-siora-id="IDN_INT_4_Programa">
         <option value="">Seleccionar programa...</option>
       </select>
     </div>
     <div>
       <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Código asignatura</div>
-      <select class="select-dashboard-red" id="codigo_4">
+      <select class="select-dashboard-red" id="codigo_4" data-siora-id="IDN_INT_4_Asignatura">
         <option value="">Seleccionar código...</option>
       </select>
     </div>
     <div>
       <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Correo institucional</div>
-      <input type="email" id="correo_integrante_4" class="form-control input-correo-integrante" placeholder="correo@cun.edu.co" data-integrante="4">
+      <input type="email" id="correo_integrante_4" class="form-control input-correo-integrante" data-siora-id="IDN_INT_4_Correo" placeholder="correo@cun.edu.co" data-integrante="4">
     </div>
     <div style="text-align: center;">
       <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">% Participación</div>
-      <input type="text" class="input-black-replica" id="part_4" readonly placeholder="%" style="text-align: center; font-weight: bold;">
+      <input type="text" class="input-black-replica" id="part_4" data-siora-id="IDN_INT_4_Participacion" readonly placeholder="%" style="text-align: center; font-weight: bold;">
     </div>
   </div>
 
@@ -297,31 +297,31 @@
   <div class="team-row">
     <div>
       <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Nombres Integrante 5:</div>
-      <input type="text" class="input-red" id="nombre_5" placeholder="Nombres...">
+      <input type="text" class="input-red" id="nombre_5" data-siora-id="IDN_INT_5_Nombre" placeholder="Nombres...">
     </div>
     <div>
       <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Apellidos Integrante 5:</div>
-      <input type="text" class="input-red" id="apellido_5" placeholder="Apellidos...">
+      <input type="text" class="input-red" id="apellido_5" data-siora-id="IDN_INT_5_Apellido" placeholder="Apellidos...">
     </div>
     <div>
       <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Programa académico</div>
-      <select class="select-dashboard-red" id="programa_5">
+      <select class="select-dashboard-red" id="programa_5" data-siora-id="IDN_INT_5_Programa">
         <option value="">Seleccionar programa...</option>
       </select>
     </div>
     <div>
       <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Código asignatura</div>
-      <select class="select-dashboard-red" id="codigo_5">
+      <select class="select-dashboard-red" id="codigo_5" data-siora-id="IDN_INT_5_Asignatura">
         <option value="">Seleccionar código...</option>
       </select>
     </div>
     <div>
       <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">Correo institucional</div>
-      <input type="email" id="correo_integrante_5" class="form-control input-correo-integrante" placeholder="correo@cun.edu.co" data-integrante="5">
+      <input type="email" id="correo_integrante_5" class="form-control input-correo-integrante" data-siora-id="IDN_INT_5_Correo" placeholder="correo@cun.edu.co" data-integrante="5">
     </div>
     <div style="text-align: center;">
       <div class="header-title" style="font-size: 9px; margin-bottom: 2px;">% Participación</div>
-      <input type="text" class="input-black-replica" id="part_5" readonly placeholder="%" style="text-align: center; font-weight: bold;">
+      <input type="text" class="input-black-replica" id="part_5" data-siora-id="IDN_INT_5_Participacion" readonly placeholder="%" style="text-align: center; font-weight: bold;">
     </div>
   </div>
 
@@ -340,7 +340,7 @@
 <!-- ================= PARTE 1: VARIABLES - TÍTULO ================= -->
     <a id="variables-titulo" class="section-banner section-banner-link" href="https://drive.google.com/file/d/1Mc0fztOoCG5_K5Rfs88blKuNjlRjh3BV/view" target="_blank" rel="noopener noreferrer">VARIABLES - TITULO</a>
     
-    <div class="outer-frame">
+<div class="outer-frame">
       
       <!-- 3 COLUMNAS SUPERIORES DE VARIABLES -->
       <div class="grid-3">
@@ -352,7 +352,7 @@
             <span class="header-subtitle">(Temática - Aplicación disciplinar)</span>
           </div>
           <!-- VARIABLE OBJETO DE ESTUDIO -->
-			<textarea class="input-red var-objeto-origen" id="var_objeto_origen" placeholder="Ingrese Variable Objeto de Estudio..."></textarea>
+			<textarea class="input-red var-objeto-origen" id="var_objeto_origen" data-siora-id="VAR_OBJ" placeholder="Ingrese Variable Objeto de Estudio..."></textarea>
           <div class="box-instruction-black">
             <div class="instruction-heading">QUÉ vamos a MEDIR</div>
             <div class="instruction-text">
@@ -369,9 +369,9 @@
           </a>
           <!-- CAMPO DESPLEGABLE NPI EN EL HTML -->
 			<div>
- 			 <!-- VARIABLE PROPÓSITO DISCIPLINAR (Select NIP) -->
-				<select class="select-dashboard-red" id="select_asignaturas_npi">
- 				 	<option value="">-- Seleccione Asignatura NIP --</option>
+			 <!-- VARIABLE PROPÓSITO DISCIPLINAR (Select NIP) -->
+				<select class="select-dashboard-red" id="select_asignaturas_npi" data-siora-id="VAR_PRO_NIP">
+				 	<option value="">-- Seleccione Asignatura NIP --</option>
 				</select>
         <input class="input-red" id="variable_proposito_alternativa" type="text"
           placeholder="Variable alternativa (docente u otro usuario)"
@@ -392,7 +392,7 @@
             <span class="header-subtitle">(Comunidad, Organización, Contexto)</span>
           </div>
           <!-- VARIABLE AUDIENCIA -->
-				<textarea class="input-red var-audiencia-origen" id="var_audiencia_origen" placeholder="Ingrese Variable Audiencia..."></textarea>
+				<textarea class="input-red var-audiencia-origen" id="var_audiencia_origen" data-siora-id="VAR_AUD" placeholder="Ingrese Variable Audiencia..."></textarea>
           <div class="box-instruction-black">
             <div class="instruction-heading">PARA QUIEN/DONDE vamos a REALIZAR</div>
             <div class="instruction-text">
@@ -409,7 +409,7 @@
 
       <!-- SECCIÓN TÍTULO -->
       <div class="title-label">TÍTULO</div>
-      <textarea class="input-red" id="titulo_origen" rows="2" placeholder="Puede autogenerarse con Variable Objeto + Asignatura NIP + Variable Audiencia y luego editarse manualmente"></textarea>
+      <textarea class="input-red" id="titulo_origen" data-siora-id="IDN_PROY_Titulo" rows="2" placeholder="Puede autogenerarse con Variable Objeto + Asignatura NIP + Variable Audiencia y luego editarse manualmente"></textarea>
       
       <div class="footer-instruction">
         Evaluación del título: debe integrar Objeto de estudio, Propósito disciplinar y Audiencia.
@@ -425,27 +425,27 @@
           <div class="box-instruction-black no-margin">
             <div class="instruction-heading clean-margin">DEFINICIÓN variable objeto de estudio</div>
           </div>
-          <textarea class="input-red def-objeto-origen" placeholder="Ingrese definición..."></textarea>
+          <textarea class="input-red def-objeto-origen" data-siora-id="VAR_DEF_OBJ" placeholder="Ingrese definición..."></textarea>
           <div class="label-bottom">Referente Bibliografico (APA)</div>
-          <textarea class="input-red input-apa-origen" placeholder="Cita APA del Objeto de Estudio..." oninput="validarFormatoAPA(this); actualizarListaReferencias();"></textarea>
+          <textarea class="input-red input-apa-origen" data-siora-id="VAR_REF_OBJ" placeholder="Cita APA del Objeto de Estudio..." oninput="validarFormatoAPA(this); actualizarListaReferencias();"></textarea>
         </div>
 
         <div class="col-item">
           <div class="box-instruction-black no-margin">
             <div class="instruction-heading clean-margin">DEFINICIÓN variable propósito disciplinar</div>
           </div>
-          <textarea class="input-red def-proposito-origen" placeholder="Ingrese definición..."></textarea>
+          <textarea class="input-red def-proposito-origen" data-siora-id="VAR_DEF_PRO" placeholder="Ingrese definición..."></textarea>
           <div class="label-bottom">Referente Bibliografico (APA)</div>
-          <textarea class="input-red input-apa-origen" placeholder="Cita APA del Propósito Disciplinar..." oninput="validarFormatoAPA(this); actualizarListaReferencias();"></textarea>
+          <textarea class="input-red input-apa-origen" data-siora-id="VAR_REF_PRO" placeholder="Cita APA del Propósito Disciplinar..." oninput="validarFormatoAPA(this); actualizarListaReferencias();"></textarea>
         </div>
 
         <div class="col-item">
           <div class="box-instruction-black no-margin">
             <div class="instruction-heading clean-margin">DEFINICIÓN variable audiencia</div>
           </div>
-          <textarea class="input-red def-audiencia-origen" placeholder="Ingrese definición..."></textarea>
+          <textarea class="input-red def-audiencia-origen" data-siora-id="VAR_DEF_AUD" placeholder="Ingrese definición..."></textarea>
           <div class="label-bottom">Referente Bibliografico (APA)</div>
-          <textarea class="input-red input-apa-origen" placeholder="Cita APA de Audiencia..." oninput="validarFormatoAPA(this); actualizarListaReferencias();"></textarea>
+          <textarea class="input-red input-apa-origen" data-siora-id="VAR_REF_AUD" placeholder="Cita APA de Audiencia..." oninput="validarFormatoAPA(this); actualizarListaReferencias();"></textarea>
         </div>
 
       </div>
@@ -476,7 +476,7 @@
       </div>
 
       <div style="margin-top: 15px;">
-        <textarea class="input-red pregunta-problema-origen" rows="3" placeholder="Redactar a partir de un Cómo, para qué, Porqué, etc, y el Título del proyecto..."></textarea>
+        <textarea class="input-red pregunta-problema-origen" id="pregunta_problema_origen" data-siora-id="PREG_COMPLEMENTO" rows="3" placeholder="Redactar a partir de un Cómo, para qué, Porqué, etc, y el Título del proyecto..."></textarea>
         <div class="footer-instruction" style="margin-bottom: 0;">
           texto para validar
         </div>
@@ -689,37 +689,37 @@
       <!-- BLOQUE DE CONTENEDORES DE INDICADORES (BORDES AZUL/NEGRO EXTERNO + CASILLAS ROJAS a-f) -->
       <div class="grid-3">
         
-        <!-- Columna 1 de Indicadores -->
-        <div class="indicators-box">
-          <div class="item-row"><span class="item-letter">a.</span><input type="text" class="input-red ind-obj-a-origen"></div>
-          <div class="item-row"><span class="item-letter">b.</span><input type="text" class="input-red ind-obj-b-origen"></div>
-          <div class="item-row"><span class="item-letter">c.</span><input type="text" class="input-red ind-obj-c-origen"></div>
-          <div class="item-row"><span class="item-letter">d.</span><input type="text" class="input-red ind-obj-d-origen"></div>
-          <div class="item-row"><span class="item-letter">e.</span><input type="text" class="input-red ind-obj-e-origen"></div>
-          <div class="item-row"><span class="item-letter">f.</span><input type="text" class="input-red ind-obj-f-origen"></div>
-        </div>
+  <!-- Columna 1 de Indicadores (Objeto de Estudio) -->
+  <div class="indicators-box">
+    <div class="item-row"><span class="item-letter">a.</span><input type="text" class="input-red ind-obj-a-origen" data-siora-id="VAR_OBJ_IND_a"></div>
+    <div class="item-row"><span class="item-letter">b.</span><input type="text" class="input-red ind-obj-b-origen" data-siora-id="VAR_OBJ_IND_b"></div>
+    <div class="item-row"><span class="item-letter">c.</span><input type="text" class="input-red ind-obj-c-origen" data-siora-id="VAR_OBJ_IND_c"></div>
+    <div class="item-row"><span class="item-letter">d.</span><input type="text" class="input-red ind-obj-d-origen" data-siora-id="VAR_OBJ_IND_d"></div>
+    <div class="item-row"><span class="item-letter">e.</span><input type="text" class="input-red ind-obj-e-origen" data-siora-id="VAR_OBJ_IND_e"></div>
+    <div class="item-row"><span class="item-letter">f.</span><input type="text" class="input-red ind-obj-f-origen" data-siora-id="VAR_OBJ_IND_f"></div>
+  </div>
 
-        <!-- Columna 2 de Indicadores -->
-        <div class="indicators-box">
-          <div class="item-row"><span class="item-letter">a.</span><input type="text" class="input-red ind-pro-a-origen"></div>
-          <div class="item-row"><span class="item-letter">b.</span><input type="text" class="input-red ind-pro-b-origen"></div>
-          <div class="item-row"><span class="item-letter">c.</span><input type="text" class="input-red ind-pro-c-origen"></div>
-          <div class="item-row"><span class="item-letter">d.</span><input type="text" class="input-red ind-pro-d-origen"></div>
-          <div class="item-row"><span class="item-letter">e.</span><input type="text" class="input-red ind-pro-e-origen"></div>
-          <div class="item-row"><span class="item-letter">f.</span><input type="text" class="input-red ind-pro-f-origen"></div>
-        </div>
+  <!-- Columna 2 de Indicadores (Propósito Disciplinar) -->
+  <div class="indicators-box">
+    <div class="item-row"><span class="item-letter">a.</span><input type="text" class="input-red ind-pro-a-origen" data-siora-id="VAR_PRO_IND_a"></div>
+    <div class="item-row"><span class="item-letter">b.</span><input type="text" class="input-red ind-pro-b-origen" data-siora-id="VAR_PRO_IND_b"></div>
+    <div class="item-row"><span class="item-letter">c.</span><input type="text" class="input-red ind-pro-c-origen" data-siora-id="VAR_PRO_IND_c"></div>
+    <div class="item-row"><span class="item-letter">d.</span><input type="text" class="input-red ind-pro-d-origen" data-siora-id="VAR_PRO_IND_d"></div>
+    <div class="item-row"><span class="item-letter">e.</span><input type="text" class="input-red ind-pro-e-origen" data-siora-id="VAR_PRO_IND_e"></div>
+    <div class="item-row"><span class="item-letter">f.</span><input type="text" class="input-red ind-pro-f-origen" data-siora-id="VAR_PRO_IND_f"></div>
+  </div>
 
-        <!-- Columna 3 de Indicadores -->
-        <div class="indicators-box">
-          <div class="item-row"><span class="item-letter">a.</span><input type="text" class="input-red ind-aud-a-origen"></div>
-          <div class="item-row"><span class="item-letter">b.</span><input type="text" class="input-red ind-aud-b-origen"></div>
-          <div class="item-row"><span class="item-letter">c.</span><input type="text" class="input-red ind-aud-c-origen"></div>
-          <div class="item-row"><span class="item-letter">d.</span><input type="text" class="input-red ind-aud-d-origen"></div>
-          <div class="item-row"><span class="item-letter">e.</span><input type="text" class="input-red ind-aud-e-origen"></div>
-          <div class="item-row"><span class="item-letter">f.</span><input type="text" class="input-red ind-aud-f-origen"></div>
-        </div>
+  <!-- Columna 3 de Indicadores (Audiencia) -->
+  <div class="indicators-box">
+    <div class="item-row"><span class="item-letter">a.</span><input type="text" class="input-red ind-aud-a-origen" data-siora-id="VAR_AUD_IND_a"></div>
+    <div class="item-row"><span class="item-letter">b.</span><input type="text" class="input-red ind-aud-b-origen" data-siora-id="VAR_AUD_IND_b"></div>
+    <div class="item-row"><span class="item-letter">c.</span><input type="text" class="input-red ind-aud-c-origen" data-siora-id="VAR_AUD_IND_c"></div>
+    <div class="item-row"><span class="item-letter">d.</span><input type="text" class="input-red ind-aud-d-origen" data-siora-id="VAR_AUD_IND_d"></div>
+    <div class="item-row"><span class="item-letter">e.</span><input type="text" class="input-red ind-aud-e-origen" data-siora-id="VAR_AUD_IND_e"></div>
+    <div class="item-row"><span class="item-letter">f.</span><input type="text" class="input-red ind-aud-f-origen" data-siora-id="VAR_AUD_IND_f"></div>
+  </div>
 
-      </div>
+</div>
 
       <!-- LÍNEAS CONECTORAS INFERIORES -->
       <div class="tree-connector-up"></div>
@@ -727,7 +727,7 @@
 
       <!-- SUPUESTO DE ÉXITO DEL PROYECTO -->
       <div class="title-label" style="text-transform: uppercase; margin-top: 4px;">SUPUESTO DE ÉXITO DEL PROYECTO</div>
-      <textarea class="input-red supuesto-origen" rows="3" placeholder="Redactar el supuesto de éxito del proyecto..."></textarea>
+      <textarea class="input-red supuesto-origen" id="supuesto_origen" data-siora-id="SUP_EXITO_TEXTO" rows="3" placeholder="Redactar el supuesto de éxito del proyecto..."></textarea>
 
       <!-- TEXTO EXPLICATIVO FINAL -->
       <p class="section-desc" style="margin-top: 15px; font-style: normal;">
@@ -937,7 +937,7 @@
       <!-- FILA COMPUESTA DE OBJETIVO GENERAL -->
       <div class="grid-obj-gen">
         <div>
-          <input type="text" class="input-red objetivo-verbo-origen" placeholder="Verbo en infinitivo..." style="text-align: center;">
+          <input type="text" class="input-red objetivo-verbo-origen" data-siora-id="OBJ_GEN_VERBO" placeholder="Verbo en infinitivo..." style="text-align: center;">
           <div class="sub-caption" style="text-align: center;">Verbo +</div>
         </div>
         <div>
@@ -948,7 +948,7 @@
 
       <!-- REDACCIÓN OBJETIVO GENERAL -->
       <div style="margin-top: 10px;">
-        <textarea class="input-red objetivo-general-origen" rows="3" placeholder="Redactar a partir de Objetivo y título(tema) del proyecto..."></textarea>
+        <textarea class="input-red objetivo-general-origen" data-siora-id="OBJ_GEN_TEXTO" rows="3" placeholder="Redactar a partir de Objetivo y título(tema) del proyecto..."></textarea>
         <div class="footer-instruction">Redactar a partir de Objetivo y título(tema) del proyecto</div>
         <div id="evaluacion_objetivo_general" class="title-evaluation" aria-live="polite">
           Escriba el objetivo general para evaluar el verbo y su relación con el título del proyecto.
@@ -1188,7 +1188,7 @@
         <div class="grid-3">
           <div>
             <div class="header-title" style="font-size: 10px;">ENFOQUE DE LA INVESTIGACIÓN</div>
-            <select class="input-red enfoque-general-select">
+            <select class="input-red enfoque-general-select" data-siora-id="MET_ENF_TIPO">
               <option value="" disabled selected>Seleccione enfoque...</option>
               <option value="cualitativa">Cualitativa</option>
               <option value="cuantitativa">Cuantitativa</option>
@@ -1433,29 +1433,29 @@
       <div class="grid-3" style="grid-template-columns: repeat(4, 1fr);">
         <div>
           <div class="title-label" style="font-size: 11px;">POBLACIÓN</div>
-          <input type="number" id="muestreo_poblacion" class="input-red" min="1" step="1" placeholder="Solo números">
+          <input type="number" id="muestreo_poblacion" data-siora-id="MUE_PARAM_POBLACION" class="input-red" min="1" step="1" placeholder="Solo números">
         </div>
 
         <div>
           <div class="title-label" style="font-size: 11px;">NIVEL DE CONFIANZA (%)</div>
-          <input type="number" id="muestreo_confianza" class="input-red" min="80" max="99" step="0.1" placeholder="Ej: 95">
+          <input type="number" id="muestreo_confianza" data-siora-id="MUE_PARAM_CONFIANZA" class="input-red" min="80" max="99" step="0.1" placeholder="Ej: 95">
         </div>
 
         <div>
           <div class="title-label" style="font-size: 11px;">MARGEN DE ERROR (%)</div>
-          <input type="number" id="muestreo_error" class="input-red" min="1" max="20" step="0.1" placeholder="Ej: 5">
+          <input type="number" id="muestreo_error" data-siora-id="MUE_PARAM_MARGEN" class="input-red" min="1" max="20" step="0.1" placeholder="Ej: 5">
         </div>
 
         <div>
           <div class="title-label" style="font-size: 11px;">MUESTRA</div>
-          <input type="number" id="muestreo_muestra" class="input-black-replica" readonly placeholder="Resultado automático">
+          <input type="number" id="muestreo_muestra" data-siora-id="MUE_RES_TOTAL" class="input-black-replica" readonly placeholder="Resultado automático">
         </div>
       </div>
 
       <div class="grid-3" style="margin-top: 15px;">
         <div style="grid-column: 1 / span 3;">
           <div class="title-label" style="font-size: 11px;">TÉCNICA DE RECOLECCIÓN DE INFORMACIÓN</div>
-          <select id="tecnica_recoleccion" class="input-red">
+          <select id="tecnica_recoleccion" data-siora-id="MUE_TEC_REC" class="input-red">
             <option value="" disabled selected>Botón desplegable técnica...</option>
             <option value="cuestionario">Cuestionario</option>
             <option value="entrevista">Entrevista</option>
@@ -1468,7 +1468,7 @@
       </div>
 
       <div style="margin-top: 15px;">
-        <input type="url" id="link_instrumento" class="input-red" placeholder="Ingrese el Link del Instrumento de medición...">
+        <input type="url" id="link_instrumento" class="input-red" data-siora-id="MUE_LINK_INS" placeholder="Ingrese el Link del Instrumento de medición...">
         <div class="label-bottom" style="margin-top: 3px;">Link del Instrumento</div>
       </div>
     </div>		
@@ -1495,7 +1495,7 @@
             <textarea class="input-black-replica var-objeto-target" rows="2" placeholder="Se replica variable objeto de estudio"></textarea>
           </div>
           <div>
-            <textarea class="input-red" rows="2" placeholder="Sub título (atractivo para el lector)..."></textarea>
+            <textarea class="input-red" data-siora-id="MUE_SUB_TITULO" rows="2" placeholder="Sub título (atractivo para el lector)..."></textarea>
             <div class="sub-caption" style="text-align: right;">Sub título</div>
           </div>
         </div>
@@ -1515,18 +1515,18 @@
               <div class="grid-2-mini" style="margin-top: 5px;">
                 <div>
                   <div class="header-title" style="font-size: 9px;">DEFINICIÓN</div>
-                  <textarea class="input-red" rows="3" placeholder="Definición..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_A_DEFINICION" rows="3" placeholder="Definición..."></textarea>
                   <div class="header-title" style="font-size: 9px; margin-top: 4px;">Referente Bibliográfico (APA)</div>
-                  <textarea class="input-red" rows="3" placeholder="APA..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_A_APA" rows="3" placeholder="APA..."></textarea>
                 </div>
 				  <div class="ans-box">
                   <div class="header-title" style="font-size: 9px;">Análisis de respuesta Ítem 1</div>
-                  <textarea class="input-red" rows="3" placeholder="Análisis..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_A_ANALISIS" rows="3" placeholder="Análisis..."></textarea>
                 
                 <div class="pronostico-col">
                   <div class="arrow-down">➔</div>
                   <div class="header-title" style="font-size: 9px;">Pronóstico</div>
-                  <textarea class="input-red" rows="6" placeholder="Pronóstico..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_A_PRONOSTICO" rows="6" placeholder="Pronóstico..."></textarea>
                 </div>
 				 </div>
               </div>
@@ -1542,18 +1542,18 @@
               <div class="grid-2-mini" style="margin-top: 5px;">
                 <div>
                   <div class="header-title" style="font-size: 9px;">DEFINICIÓN</div>
-                  <textarea class="input-red" rows="3" placeholder="Definición..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_B_DEFINICION" rows="3" placeholder="Definición..."></textarea>
                   <div class="header-title" style="font-size: 9px; margin-top: 4px;">Referente Bibliográfico (APA)</div>
-                  <textarea class="input-red" rows="3" placeholder="APA..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_B_APA" rows="3" placeholder="APA..."></textarea>
                 </div>
 				  <div class="ans-box">
                   <div class="header-title" style="font-size: 9px;">Análisis de respuesta Ítem 2</div>
-                  <textarea class="input-red" rows="3" placeholder="Análisis..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_B_ANALISIS" rows="3" placeholder="Análisis..."></textarea>
                 
                 <div class="pronostico-col">
                   <div class="arrow-down">➔</div>
                   <div class="header-title" style="font-size: 9px;">Pronóstico</div>
-                  <textarea class="input-red" rows="6" placeholder="Pronóstico..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_B_PRONOSTICO" rows="6" placeholder="Pronóstico..."></textarea>
                 </div>
 				 </div>
               </div>
@@ -1572,17 +1572,17 @@
               <div class="grid-2-mini" style="margin-top: 5px;">
                 <div>
                   <div class="header-title" style="font-size: 9px;">DEFINICIÓN</div>
-                  <textarea class="input-red" rows="3" placeholder="Definición..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_C_DEFINICION" rows="3" placeholder="Definición..."></textarea>
                   <div class="header-title" style="font-size: 9px; margin-top: 4px;">Referente Bibliográfico (APA)</div>
-                  <textarea class="input-red" rows="3" placeholder="APA..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_C_APA" rows="3" placeholder="APA..."></textarea>
                 </div>
                 <div class="pronostico-col">
 <div class="header-title" style="font-size: 9px;">Análisis de respuesta Ítem 3</div>
-                  <textarea class="input-red" rows="3" placeholder="Análisis..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_C_ANALISIS" rows="3" placeholder="Análisis..."></textarea>
                   <div class="header-title" style="font-size: 9px;">
                     <div class="arrow-down">➔</div>
                   Pronóstico</div>
-                  <textarea class="input-red" rows="6" placeholder="Pronóstico..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_C_PRONOSTICO" rows="6" placeholder="Pronóstico..."></textarea>
                 </div>
               </div>
             </div>
@@ -1597,17 +1597,17 @@
               <div class="grid-2-mini" style="margin-top: 5px;">
                 <div>
                   <div class="header-title" style="font-size: 9px;">DEFINICIÓN</div>
-                  <textarea class="input-red" rows="3" placeholder="Definición..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_D_DEFINICION" rows="3" placeholder="Definición..."></textarea>
                   <div class="header-title" style="font-size: 9px; margin-top: 4px;">Referente Bibliográfico (APA)</div>
-                  <textarea class="input-red" rows="3" placeholder="APA..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_D_APA" rows="3" placeholder="APA..."></textarea>
                 </div>
                 <div class="pronostico-col">
 <div class="header-title" style="font-size: 9px;">Análisis de respuesta Ítem 4</div>
-                  <textarea class="input-red" rows="3" placeholder="Análisis..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_D_ANALISIS" rows="3" placeholder="Análisis..."></textarea>
                   <div class="header-title" style="font-size: 9px;">
                     <div class="arrow-down">➔</div>
                   Pronóstico</div>
-                  <textarea class="input-red" rows="6" placeholder="Pronóstico..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_D_PRONOSTICO" rows="6" placeholder="Pronóstico..."></textarea>
                 </div>
               </div>
             </div>
@@ -1625,17 +1625,17 @@
               <div class="grid-2-mini" style="margin-top: 5px;">
                 <div>
                   <div class="header-title" style="font-size: 9px;">DEFINICIÓN</div>
-                  <textarea class="input-red" rows="3" placeholder="Definición..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_E_DEFINICION" rows="3" placeholder="Definición..."></textarea>
                   <div class="header-title" style="font-size: 9px; margin-top: 4px;">Referente Bibliográfico (APA)</div>
-                  <textarea class="input-red" rows="3" placeholder="APA..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_E_APA" rows="3" placeholder="APA..."></textarea>
                 </div>
                 <div class="pronostico-col">
 <div class="header-title" style="font-size: 9px;">Análisis de respuesta Ítem 5</div>
-                  <textarea class="input-red" rows="3" placeholder="Análisis..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_E_ANALISIS" rows="3" placeholder="Análisis..."></textarea>
                   <div class="header-title" style="font-size: 9px;">
                     <div class="arrow-down">➔</div>
                   Pronóstico</div>
-                  <textarea class="input-red" rows="6" placeholder="Pronóstico..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_E_PRONOSTICO" rows="6" placeholder="Pronóstico..."></textarea>
                 </div>
               </div>
             </div>
@@ -1650,17 +1650,17 @@
               <div class="grid-2-mini" style="margin-top: 5px;">
                 <div>
                   <div class="header-title" style="font-size: 9px;">DEFINICIÓN</div>
-                  <textarea class="input-red" rows="3" placeholder="Definición..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_F_DEFINICION" rows="3" placeholder="Definición..."></textarea>
                   <div class="header-title" style="font-size: 9px; margin-top: 4px;">Referente Bibliográfico (APA)</div>
-                  <textarea class="input-red" rows="3" placeholder="APA..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_F_APA" rows="3" placeholder="APA..."></textarea>
                 </div>
                 <div class="pronostico-col">
 <div class="header-title" style="font-size: 9px;">Análisis de respuesta Ítem 6</div>
-                  <textarea class="input-red" rows="3" placeholder="Análisis..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_F_ANALISIS" rows="3" placeholder="Análisis..."></textarea>
                   <div class="header-title" style="font-size: 9px;">
                     <div class="arrow-down">➔</div>
                   Pronóstico</div>
-                  <textarea class="input-red" rows="6" placeholder="Pronóstico..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_F_PRONOSTICO" rows="6" placeholder="Pronóstico..."></textarea>
                 </div>
               </div>
             </div>
@@ -1697,17 +1697,17 @@
               <div class="grid-2-mini" style="margin-top: 5px;">
                 <div>
                   <div class="header-title" style="font-size: 9px;">DEFINICIÓN</div>
-                  <textarea class="input-red" rows="3" placeholder="Definición..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_A_DEFINICION" rows="3" placeholder="Definición..."></textarea>
                   <div class="header-title" style="font-size: 9px; margin-top: 4px;">Referente Bibliográfico (APA)</div>
-                  <textarea class="input-red" rows="3" placeholder="APA..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_A_APA" rows="3" placeholder="APA..."></textarea>
                 </div>
                 <div class="pronostico-col">
 <div class="header-title" style="font-size: 9px;">Análisis de respuesta Ítem 1</div>
-                  <textarea class="input-red" rows="3" placeholder="Análisis..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_A_ANALISIS" rows="3" placeholder="Análisis..."></textarea>
                   <div class="header-title" style="font-size: 9px;">
                     <div class="arrow-down">➔</div>
                   Pronóstico</div>
-                  <textarea class="input-red" rows="6" placeholder="Pronóstico..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_A_PRONOSTICO" rows="6" placeholder="Pronóstico..."></textarea>
                 </div>
               </div>
             </div>
@@ -1722,17 +1722,17 @@
               <div class="grid-2-mini" style="margin-top: 5px;">
                 <div>
                   <div class="header-title" style="font-size: 9px;">DEFINICIÓN</div>
-                  <textarea class="input-red" rows="3" placeholder="Definición..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_B_DEFINICION" rows="3" placeholder="Definición..."></textarea>
                   <div class="header-title" style="font-size: 9px; margin-top: 4px;">Referente Bibliográfico (APA)</div>
-                  <textarea class="input-red" rows="3" placeholder="APA..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_B_APA" rows="3" placeholder="APA..."></textarea>
                 </div>
                 <div class="pronostico-col">
 <div class="header-title" style="font-size: 9px;">Análisis de respuesta Ítem 2</div>
-                  <textarea class="input-red" rows="3" placeholder="Análisis..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_B_ANALISIS" rows="3" placeholder="Análisis..."></textarea>
                   <div class="header-title" style="font-size: 9px;">
                     <div class="arrow-down">➔</div>
                   Pronóstico</div>
-                  <textarea class="input-red" rows="6" placeholder="Pronóstico..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_B_PRONOSTICO" rows="6" placeholder="Pronóstico..."></textarea>
                 </div>
               </div>
             </div>
@@ -1750,17 +1750,17 @@
               <div class="grid-2-mini" style="margin-top: 5px;">
                 <div>
                   <div class="header-title" style="font-size: 9px;">DEFINICIÓN</div>
-                  <textarea class="input-red" rows="3" placeholder="Definición..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_C_DEFINICION" rows="3" placeholder="Definición..."></textarea>
                   <div class="header-title" style="font-size: 9px; margin-top: 4px;">Referente Bibliográfico (APA)</div>
-                  <textarea class="input-red" rows="3" placeholder="APA..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_C_APA" rows="3" placeholder="APA..."></textarea>
                 </div>
                 <div class="pronostico-col">
 <div class="header-title" style="font-size: 9px;">Análisis de respuesta Ítem 3</div>
-                  <textarea class="input-red" rows="3" placeholder="Análisis..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_C_ANALISIS" rows="3" placeholder="Análisis..."></textarea>
                   <div class="header-title" style="font-size: 9px;">
                     <div class="arrow-down">➔</div>
                   Pronóstico</div>
-                  <textarea class="input-red" rows="6" placeholder="Pronóstico..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_C_PRONOSTICO" rows="6" placeholder="Pronóstico..."></textarea>
                 </div>
               </div>
             </div>
@@ -1775,17 +1775,17 @@
               <div class="grid-2-mini" style="margin-top: 5px;">
                 <div>
                   <div class="header-title" style="font-size: 9px;">DEFINICIÓN</div>
-                  <textarea class="input-red" rows="3" placeholder="Definición..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_D_DEFINICION" rows="3" placeholder="Definición..."></textarea>
                   <div class="header-title" style="font-size: 9px; margin-top: 4px;">Referente Bibliográfico (APA)</div>
-                  <textarea class="input-red" rows="3" placeholder="APA..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_D_APA" rows="3" placeholder="APA..."></textarea>
                 </div>
                 <div class="pronostico-col">
 <div class="header-title" style="font-size: 9px;">Análisis de respuesta Ítem 4</div>
-                  <textarea class="input-red" rows="3" placeholder="Análisis..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_D_ANALISIS" rows="3" placeholder="Análisis..."></textarea>
                   <div class="header-title" style="font-size: 9px;">
                     <div class="arrow-down">➔</div>
                   Pronóstico</div>
-                  <textarea class="input-red" rows="6" placeholder="Pronóstico..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_D_PRONOSTICO"   rows="6" placeholder="Pronóstico..."></textarea>
                 </div>
               </div>
             </div>
@@ -1803,17 +1803,17 @@
               <div class="grid-2-mini" style="margin-top: 5px;">
                 <div>
                   <div class="header-title" style="font-size: 9px;">DEFINICIÓN</div>
-                  <textarea class="input-red" rows="3" placeholder="Definición..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_E_DEFINICION" rows="3" placeholder="Definición..."></textarea>
                   <div class="header-title" style="font-size: 9px; margin-top: 4px;">Referente Bibliográfico (APA)</div>
-                  <textarea class="input-red" rows="3" placeholder="APA..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_E_APA" rows="3" placeholder="APA..."></textarea>
                 </div>
                 <div class="pronostico-col">
 <div class="header-title" style="font-size: 9px;">Análisis de respuesta Ítem 5</div>
-                  <textarea class="input-red" rows="3" placeholder="Análisis..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_E_ANALISIS" rows="3" placeholder="Análisis..."></textarea>
                   <div class="header-title" style="font-size: 9px;">
                     <div class="arrow-down">➔</div>
                   Pronóstico</div>
-                  <textarea class="input-red" rows="6" placeholder="Pronóstico..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_E_PRONOSTICO" rows="6" placeholder="Pronóstico..."></textarea>
                 </div>
               </div>
             </div>
@@ -1828,17 +1828,17 @@
               <div class="grid-2-mini" style="margin-top: 5px;">
                 <div>
                   <div class="header-title" style="font-size: 9px;">DEFINICIÓN</div>
-                  <textarea class="input-red" rows="3" placeholder="Definición..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_F_DEFINICION" rows="3" placeholder="Definición..."></textarea>
                   <div class="header-title" style="font-size: 9px; margin-top: 4px;">Referente Bibliográfico (APA)</div>
-                  <textarea class="input-red" rows="3" placeholder="APA..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_F_APA" rows="3" placeholder="APA..."></textarea>
                 </div>
                 <div class="pronostico-col">
 <div class="header-title" style="font-size: 9px;">Análisis de respuesta Ítem 6</div>
-                  <textarea class="input-red" rows="3" placeholder="Análisis..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_F_ANALISIS" rows="3" placeholder="Análisis..."></textarea>
                   <div class="header-title" style="font-size: 9px;">
                     <div class="arrow-down">➔</div>
                   Pronóstico</div>
-                  <textarea class="input-red" rows="6" placeholder="Pronóstico..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_F_PRONOSTICO"   rows="6" placeholder="Pronóstico..."></textarea>
                 </div>
               </div>
             </div>
@@ -1875,17 +1875,17 @@
               <div class="grid-2-mini" style="margin-top: 5px;">
                 <div>
                   <div class="header-title" style="font-size: 9px;">DEFINICIÓN</div>
-                  <textarea class="input-red" rows="3" placeholder="Definición..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_A_DEFINICION" rows="3" placeholder="Definición..."></textarea>
                   <div class="header-title" style="font-size: 9px; margin-top: 4px;">Referente Bibliográfico (APA)</div>
-                  <textarea class="input-red" rows="3" placeholder="APA..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_A_APA" rows="3" placeholder="APA..."></textarea>
                 </div>
                 <div class="pronostico-col">
 <div class="header-title" style="font-size: 9px;">Análisis de respuesta Ítem 1</div>
-                  <textarea class="input-red" rows="3" placeholder="Análisis..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_A_ANALISIS" rows="3" placeholder="Análisis..."></textarea>
                   <div class="header-title" style="font-size: 9px;">
                     <div class="arrow-down">➔</div>
                   Pronóstico</div>
-                  <textarea class="input-red" rows="6" placeholder="Pronóstico..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_A_PRONOSTICO"   rows="6" placeholder="Pronóstico..."></textarea>
                 </div>
               </div>
             </div>
@@ -1900,17 +1900,17 @@
               <div class="grid-2-mini" style="margin-top: 5px;">
                 <div>
                   <div class="header-title" style="font-size: 9px;">DEFINICIÓN</div>
-                  <textarea class="input-red" rows="3" placeholder="Definición..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_B_DEFINICION" rows="3" placeholder="Definición..."></textarea>
                   <div class="header-title" style="font-size: 9px; margin-top: 4px;">Referente Bibliográfico (APA)</div>
-                  <textarea class="input-red" rows="3" placeholder="APA..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_B_APA" rows="3" placeholder="APA..."></textarea>
                 </div>
                 <div class="pronostico-col">
 <div class="header-title" style="font-size: 9px;">Análisis de respuesta Ítem 2</div>
-                  <textarea class="input-red" rows="3" placeholder="Análisis..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_B_ANALISIS" rows="3" placeholder="Análisis..."></textarea>
                   <div class="header-title" style="font-size: 9px;">
                     <div class="arrow-down">➔</div>
                   Pronóstico</div>
-                  <textarea class="input-red" rows="6" placeholder="Pronóstico..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_B_PRONOSTICO"   rows="6" placeholder="Pronóstico..."></textarea>
                 </div>
               </div>
             </div>
@@ -1928,17 +1928,17 @@
               <div class="grid-2-mini" style="margin-top: 5px;">
                 <div>
                   <div class="header-title" style="font-size: 9px;">DEFINICIÓN</div>
-                  <textarea class="input-red" rows="3" placeholder="Definición..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_C_DEFINICION" rows="3" placeholder="Definición..."></textarea>
                   <div class="header-title" style="font-size: 9px; margin-top: 4px;">Referente Bibliográfico (APA)</div>
-                  <textarea class="input-red" rows="3" placeholder="APA..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_C_APA" rows="3" placeholder="APA..."></textarea>
                 </div>
                 <div class="pronostico-col">
 <div class="header-title" style="font-size: 9px;">Análisis de respuesta Ítem 3</div>
-                  <textarea class="input-red" rows="3" placeholder="Análisis..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_C_ANALISIS" rows="3" placeholder="Análisis..."></textarea>
                   <div class="header-title" style="font-size: 9px;">
                     <div class="arrow-down">➔</div>
                   Pronóstico</div>
-                  <textarea class="input-red" rows="6" placeholder="Pronóstico..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_C_PRONOSTICO"   rows="6" placeholder="Pronóstico..."></textarea>
                 </div>
               </div>
             </div>
@@ -1953,17 +1953,17 @@
               <div class="grid-2-mini" style="margin-top: 5px;">
                 <div>
                   <div class="header-title" style="font-size: 9px;">DEFINICIÓN</div>
-                  <textarea class="input-red" rows="3" placeholder="Definición..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_D_DEFINICION" rows="3" placeholder="Definición..."></textarea>
                   <div class="header-title" style="font-size: 9px; margin-top: 4px;">Referente Bibliográfico (APA)</div>
-                  <textarea class="input-red" rows="3" placeholder="APA..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_D_APA" rows="3" placeholder="APA..."></textarea>
                 </div>
                 <div class="pronostico-col">
 <div class="header-title" style="font-size: 9px;">Análisis de respuesta Ítem 4</div>
-                  <textarea class="input-red" rows="3" placeholder="Análisis..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_D_ANALISIS" rows="3" placeholder="Análisis..."></textarea>
                   <div class="header-title" style="font-size: 9px;">
                     <div class="arrow-down">➔</div>
                   Pronóstico</div>
-                  <textarea class="input-red" rows="6" placeholder="Pronóstico..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_D_PRONOSTICO"   rows="6" placeholder="Pronóstico..."></textarea>
                 </div>
               </div>
             </div>
@@ -1981,17 +1981,17 @@
               <div class="grid-2-mini" style="margin-top: 5px;">
                 <div>
                   <div class="header-title" style="font-size: 9px;">DEFINICIÓN</div>
-                  <textarea class="input-red" rows="3" placeholder="Definición..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_E_DEFINICION" rows="3" placeholder="Definición..."></textarea>
                   <div class="header-title" style="font-size: 9px; margin-top: 4px;">Referente Bibliográfico (APA)</div>
-                  <textarea class="input-red" rows="3" placeholder="APA..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_E_APA" rows="3" placeholder="APA..."></textarea>
                 </div>
                 <div class="pronostico-col">
 <div class="header-title" style="font-size: 9px;">Análisis de respuesta Ítem 5</div>
-                  <textarea class="input-red" rows="3" placeholder="Análisis..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_E_ANALISIS" rows="3" placeholder="Análisis..."></textarea>
                   <div class="header-title" style="font-size: 9px;">
                     <div class="arrow-down">➔</div>
                   Pronóstico</div>
-                  <textarea class="input-red" rows="6" placeholder="Pronóstico..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_E_PRONOSTICO"   rows="6" placeholder="Pronóstico..."></textarea>
                 </div>
 
               </div>
@@ -2007,17 +2007,17 @@
               <div class="grid-2-mini" style="margin-top: 5px;">
                 <div>
                   <div class="header-title" style="font-size: 9px;">DEFINICIÓN</div>
-                  <textarea class="input-red" rows="3" placeholder="Definición..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_F_DEFINICION" rows="3" placeholder="Definición..."></textarea>
                   <div class="header-title" style="font-size: 9px; margin-top: 4px;">Referente Bibliográfico (APA)</div>
-                  <textarea class="input-red" rows="3" placeholder="APA..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_F_APA" rows="3" placeholder="APA..."></textarea>
                 </div>
                 <div class="pronostico-col">
 <div class="header-title" style="font-size: 9px;">Análisis de respuesta Ítem 6</div>
-                  <textarea class="input-red" rows="3" placeholder="Análisis..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_F_ANALISIS" rows="3" placeholder="Análisis..."></textarea>
                   <div class="header-title" style="font-size: 9px;">
                     <div class="arrow-down">➔</div>
                   Pronóstico</div>
-                  <textarea class="input-red" rows="6" placeholder="Pronóstico..."></textarea>
+                  <textarea class="input-red" data-siora-id="MUE_IND_F_PRONOSTICO"   rows="6" placeholder="Pronóstico..."></textarea>
                 </div>
               </div>
             </div>
@@ -2055,63 +2055,63 @@
         <div class="conconclusion-row">
           <textarea class="input-black-replica" rows="3" placeholder="Se replica Pronóstico del indicador &quot;a&quot; de la variable Objeto de Estudio"></textarea>
           <span class="row-arrow">➔</span>
-          <textarea class="input-red" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
+          <textarea class="input-red" data-siora-id="MUE_IND_A_PRONOSTICO" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
           <span class="row-arrow">➔</span>
-          <textarea class="input-red" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
+          <textarea class="input-red" data-siora-id="MUE_IND_A_ACCIONES" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
         </div>
 
         <!-- EJEMPLO FILA 2: INDICADOR B (OBJETO DE ESTUDIO) -->
         <div class="conconclusion-row">
           <textarea class="input-black-replica" rows="3" placeholder="Se replica Pronóstico del indicador &quot;b&quot; de la variable Objeto de Estudio"></textarea>
           <span class="row-arrow">➔</span>
-          <textarea class="input-red" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
+          <textarea class="input-red" data-siora-id="MUE_IND_B_PRONOSTICO" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
           <span class="row-arrow">➔</span>
-          <textarea class="input-red" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
+          <textarea class="input-red" data-siora-id="MUE_IND_B_ACCIONES" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
         </div>
 
         <!-- EJEMPLO FILA 3: INDICADOR C (OBJETO DE ESTUDIO) -->
         <div class="conconclusion-row">
           <textarea class="input-black-replica" rows="3" placeholder="Se replica Pronóstico del indicador &quot;c&quot; de la variable Objeto de Estudio"></textarea>
           <span class="row-arrow">➔</span>
-          <textarea class="input-red" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
+          <textarea class="input-red" data-siora-id="MUE_IND_C_PRONOSTICO" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
           <span class="row-arrow">➔</span>
-          <textarea class="input-red" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
+          <textarea class="input-red" data-siora-id="MUE_IND_C_ACCIONES" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
         </div>
 
         <!-- EJEMPLO FILA 4: INDICADOR D (OBJETO DE ESTUDIO) -->
         <div class="conconclusion-row">
           <textarea class="input-black-replica" rows="3" placeholder="Se replica Pronóstico del indicador &quot;d&quot; de la variable Objeto de Estudio"></textarea>
           <span class="row-arrow">➔</span>
-          <textarea class="input-red" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
+          <textarea class="input-red" data-siora-id="MUE_IND_D_PRONOSTICO" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
           <span class="row-arrow">➔</span>
-          <textarea class="input-red" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
+          <textarea class="input-red" data-siora-id="MUE_IND_D_ACCIONES" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
         </div>
 
         <!-- EJEMPLO FILA 5: INDICADOR E (OBJETO DE ESTUDIO) -->
         <div class="conconclusion-row">
           <textarea class="input-black-replica" rows="3" placeholder="Se replica Pronóstico del indicador &quot;e&quot; de la variable Objeto de Estudio"></textarea>
           <span class="row-arrow">➔</span>
-          <textarea class="input-red" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
+          <textarea class="input-red" data-siora-id="MUE_IND_E_PRONOSTICO" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
           <span class="row-arrow">➔</span>
-          <textarea class="input-red" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
+          <textarea class="input-red" data-siora-id="MUE_IND_E_ACCIONES" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
         </div>
 
         <!-- EJEMPLO FILA 6: INDICADOR F (OBJETO DE ESTUDIO) -->
         <div class="conconclusion-row">
           <textarea class="input-black-replica" rows="3" placeholder="Se replica Pronóstico del indicador &quot;f&quot; de la variable Objeto de Estudio"></textarea>
           <span class="row-arrow">➔</span>
-          <textarea class="input-red" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
+          <textarea class="input-red" data-siora-id="MUE_IND_F_PRONOSTICO" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
           <span class="row-arrow">➔</span>
-          <textarea class="input-red" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
+          <textarea class="input-red" data-siora-id="MUE_IND_F_ACCIONES" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
         </div>
 
         <!-- FILA 7: INICIO VARIABLE PROPÓSITO DISCIPLINAR -->
         <div class="conconclusion-row" style="margin-top: 15px;">
           <textarea class="input-black-replica" rows="3" placeholder="Se replica Pronóstico del indicador &quot;a&quot; de la variable Propósito disciplinar"></textarea>
           <span class="row-arrow">➔</span>
-          <textarea class="input-red" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
+          <textarea class="input-red" data-siora-id="MUE_IND_A_PRONOSTICO" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
           <span class="row-arrow">➔</span>
-          <textarea class="input-red" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
+          <textarea class="input-red" data-siora-id="MUE_IND_A_ACCIONES" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
         </div>
 
       </div>
@@ -2123,45 +2123,45 @@
         <div class="conconclusion-row">
           <textarea class="input-black-replica" rows="3" placeholder="Se replica Pronóstico del indicador &quot;b&quot; de la variable Propósito disciplinar"></textarea>
           <span class="row-arrow">➔</span>
-          <textarea class="input-red" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
+          <textarea class="input-red" data-siora-id="MUE_IND_B_PRONOSTICO" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
           <span class="row-arrow">➔</span>
-          <textarea class="input-red" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
+          <textarea class="input-red" data-siora-id="MUE_IND_B_ACCIONES" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
         </div>
 
         <!-- EJEMPLO FILA 2: INDICADOR B (OBJETO DE ESTUDIO) -->
         <div class="conconclusion-row">
           <textarea class="input-black-replica" rows="3" placeholder="Se replica Pronóstico del indicador &quot;c&quot; de la variable Propósito disciplinar"></textarea>
           <span class="row-arrow">➔</span>
-          <textarea class="input-red" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
+          <textarea class="input-red" data-siora-id="MUE_IND_C_PRONOSTICO" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
           <span class="row-arrow">➔</span>
-          <textarea class="input-red" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
+          <textarea class="input-red" data-siora-id="MUE_IND_C_ACCIONES" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
         </div>
 
         <!-- EJEMPLO FILA 3: INDICADOR C (OBJETO DE ESTUDIO) -->
         <div class="conconclusion-row">
           <textarea class="input-black-replica" rows="3" placeholder="Se replica Pronóstico del indicador &quot;d&quot; de la variable Propósito disciplinar"></textarea>
           <span class="row-arrow">➔</span>
-          <textarea class="input-red" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
+          <textarea class="input-red" data-siora-id="MUE_IND_D_PRONOSTICO" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
           <span class="row-arrow">➔</span>
-          <textarea class="input-red" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
+          <textarea class="input-red" data-siora-id="MUE_IND_D_ACCIONES" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
         </div>
 
         <!-- EJEMPLO FILA 4: INDICADOR D (OBJETO DE ESTUDIO) -->
         <div class="conconclusion-row">
           <textarea class="input-black-replica" rows="3" placeholder="Se replica Pronóstico del indicador &quot;e&quot; de la variable Propósito disciplinar"></textarea>
           <span class="row-arrow">➔</span>
-          <textarea class="input-red" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
+          <textarea class="input-red" data-siora-id="MUE_IND_E_PRONOSTICO" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
           <span class="row-arrow">➔</span>
-          <textarea class="input-red" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
+          <textarea class="input-red" data-siora-id="MUE_IND_E_ACCIONES" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
         </div>
 
         <!-- EJEMPLO FILA 5: INDICADOR E (OBJETO DE ESTUDIO) -->
         <div class="conconclusion-row">
           <textarea class="input-black-replica" rows="3" placeholder="Se replica Pronóstico del indicador &quot;f&quot; de la variable Propósito disciplinar"></textarea>
           <span class="row-arrow">➔</span>
-          <textarea class="input-red" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
+          <textarea class="input-red" data-siora-id="MUE_IND_F_PRONOSTICO" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
           <span class="row-arrow">➔</span>
-          <textarea class="input-red" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
+          <textarea class="input-red" data-siora-id="MUE_IND_F_ACCIONES" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
         </div>
 
         <!-- EJEMPLO FILA 6: INDICADOR F (OBJETO DE ESTUDIO) -->
@@ -2169,9 +2169,9 @@
         <div class="conconclusion-row" style="margin-top: 15px;">
           <textarea class="input-black-replica" rows="3" placeholder="Se replica Pronóstico del indicador &quot;a&quot; de la variable Audiencia"></textarea>
           <span class="row-arrow">➔</span>
-          <textarea class="input-red" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
+          <textarea class="input-red" data-siora-id="MUE_IND_A_PRONOSTICO" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
           <span class="row-arrow">➔</span>
-          <textarea class="input-red" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
+          <textarea class="input-red" data-siora-id="MUE_IND_A_ACCIONES" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
         </div>
 
       </div>
@@ -2183,45 +2183,45 @@
         <div class="conconclusion-row">
           <textarea class="input-black-replica" rows="3" placeholder="Se replica Pronóstico del indicador &quot;b&quot; de la variable Audiencia"></textarea>
           <span class="row-arrow">➔</span>
-          <textarea class="input-red" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
+          <textarea class="input-red" data-siora-id="MUE_IND_B_PRONOSTICO" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
           <span class="row-arrow">➔</span>
-          <textarea class="input-red" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
+          <textarea class="input-red" data-siora-id="MUE_IND_B_ACCIONES" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
         </div>
 
         <!-- EJEMPLO FILA 2: INDICADOR B (OBJETO DE ESTUDIO) -->
         <div class="conconclusion-row">
           <textarea class="input-black-replica" rows="3" placeholder="Se replica Pronóstico del indicador &quot;c&quot; de la variable Audiencia"></textarea>
           <span class="row-arrow">➔</span>
-          <textarea class="input-red" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
+          <textarea class="input-red" data-siora-id="MUE_IND_C_PRONOSTICO" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
           <span class="row-arrow">➔</span>
-          <textarea class="input-red" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
+          <textarea class="input-red" data-siora-id="MUE_IND_C_ACCIONES" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
         </div>
 
         <!-- EJEMPLO FILA 3: INDICADOR C (OBJETO DE ESTUDIO) -->
         <div class="conconclusion-row">
           <textarea class="input-black-replica" rows="3" placeholder="Se replica Pronóstico del indicador &quot;d&quot; de la variable Audiencia"></textarea>
           <span class="row-arrow">➔</span>
-          <textarea class="input-red" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
+          <textarea class="input-red" data-siora-id="MUE_IND_D_PRONOSTICO" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
           <span class="row-arrow">➔</span>
-          <textarea class="input-red" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
+          <textarea class="input-red" data-siora-id="MUE_IND_D_ACCIONES" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
         </div>
 
         <!-- EJEMPLO FILA 4: INDICADOR D (OBJETO DE ESTUDIO) -->
         <div class="conconclusion-row">
           <textarea class="input-black-replica" rows="3" placeholder="Se replica Pronóstico del indicador &quot;e&quot; de la variable Audiencia"></textarea>
           <span class="row-arrow">➔</span>
-          <textarea class="input-red" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
+          <textarea class="input-red" data-siora-id="MUE_IND_E_PRONOSTICO" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
           <span class="row-arrow">➔</span>
-          <textarea class="input-red" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
+          <textarea class="input-red" data-siora-id="MUE_IND_E_ACCIONES" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
         </div>
 
         <!-- EJEMPLO FILA 5: INDICADOR E (OBJETO DE ESTUDIO) -->
         <div class="conconclusion-row">
           <textarea class="input-black-replica" rows="3" placeholder="Se replica Pronóstico del indicador &quot;f&quot; de la variable Audiencia"></textarea>
           <span class="row-arrow">➔</span>
-          <textarea class="input-red" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
+          <textarea class="input-red" data-siora-id="MUE_IND_F_PRONOSTICO" rows="3" placeholder="Situaciones con riesgo/consecuencia..."></textarea>
           <span class="row-arrow">➔</span>
-          <textarea class="input-red" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
+          <textarea class="input-red" data-siora-id="MUE_IND_F_ACCIONES" rows="3" placeholder="Acciones preventivas / control de causa..."></textarea>
         </div>
 
         <!-- EJEMPLO FILA 6: INDICADOR F (OBJETO DE ESTUDIO) -->
